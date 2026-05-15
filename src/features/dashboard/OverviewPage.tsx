@@ -1,0 +1,51 @@
+import { HeroSection, ActiveStepCard, UpcomingSteps, HelpIllustration, OverviewFooter } from "./components";
+import type { StepItem } from "./components/UpcomingSteps";
+
+const upcomingSteps: StepItem[] = [
+  {
+    id: "2",
+    number: 2,
+    title: "Configure your triggers",
+    description: "Set up event-based triggers to automate repetitive tasks.",
+  },
+  {
+    id: "3",
+    number: 3,
+    title: "Connect modules",
+    description: "Link your data sources and outputs for seamless flow.",
+  },
+  {
+    id: "4",
+    number: 4,
+    title: "Test & deploy",
+    description: "Run a dry test and publish your automation live.",
+  },
+];
+
+export function OverviewPage() {
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 space-y-5 sm:space-y-6">
+        <HeroSection
+          contextText="Currently viewing: Getting Started Guide"
+          title="Interactive Walkthrough"
+          description="We'll highlight the elements on your page to show you exactly where to go."
+          onDismissContext={() => {}}
+        />
+
+        <ActiveStepCard
+          stepLabel="Step 1 of 4"
+          title="Setting up your first automation"
+          instruction='Click on the "Settings" gear icon in your main dashboard navigation to begin.'
+          actionLabel="Show me"
+        />
+
+        <UpcomingSteps steps={upcomingSteps} />
+
+        <HelpIllustration imageUrl="https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80" />
+      </div>
+
+      <OverviewFooter />
+    </div>
+  );
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foxio - Shadow DOM Isolation Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; background: #f3f4f6; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    h1 { font-size: 1.5rem; color: #333; }
+    p { color: #666; font-size: 0.9rem; max-width: 700px; text-align: center; }
+    .iframe-container { width: 100%; max-width: 900px; height: 600px; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    /* ===== AGGRESSIVE STYLES TO TEST SHADOW DOM ISOLATION ===== */
+    /* If Shadow DOM is working, NONE of these should affect the widget inside iframe */
+
+    /* Try to override all buttons */
+    button {
+      background: red !important;
+      color: yellow !important;
+      font-size: 30px !important;
+      border-radius: 0 !important;
+    }
+
+    /* Try to override all headings */
+    h1, h2, h3, h4, h5, h6 {
+      color: magenta !important;
+      font-family: "Comic Sans MS", cursive !important;
+      text-decoration: line-through !important;
+    }
+
+    /* Try to override all divs */
+    div {
+      border: 3px dashed red !important;
+    }
+
+    /* Try to override nav links */
+    a, nav {
+      background: lime !important;
+      color: purple !important;
+    }
+
+    /* Try to override spans */
+    span {
+      color: blue !important;
+      font-size: 40px !important;
+    }
+
+    /* Override all images */
+    img {
+      opacity: 0.1 !important;
+      filter: grayscale(100%) !important;
+    }
+
+    /* ===== END AGGRESSIVE STYLES ===== */
+
+    /* Fix our own page elements from the aggressive styles above */
+    body > h1 { color: #333 !important; font-family: sans-serif !important; text-decoration: none !important; }
+    body > p { color: #666 !important; }
+    body > .iframe-container { border: none !important; }
+    body { border: none !important; }
+  </style>
+</head>
+<body>
+  <h1>🛡️ Shadow DOM Isolation Test</h1>
+  <p>
+    This page has <strong>aggressive CSS</strong> that turns buttons red, headings magenta with Comic Sans,
+    adds dashed red borders to all divs, and makes links lime green.<br><br>
+    If Shadow DOM is working correctly, the Foxio widget inside the iframe should look <strong>completely normal</strong> and unaffected.
+  </p>
+  <div class="iframe-container">
+    <iframe src="http://localhost:5173"></iframe>
+  </div>
+</body>
+</html>
