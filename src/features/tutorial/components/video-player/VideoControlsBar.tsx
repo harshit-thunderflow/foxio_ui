@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Play, Pause, Maximize, Minimize } from "lucide-react";
+import { Play, Pause, Maximize, Minimize, SkipBack, SkipForward } from "lucide-react";
 import { VideoSeekBar } from "./VideoSeekBar";
 import { VideoVolumeControl } from "./VideoVolumeControl";
 import type { VideoPlayerState, VideoPlayerActions } from "../../hooks";
@@ -7,6 +7,10 @@ import type { VideoPlayerState, VideoPlayerActions } from "../../hooks";
 interface VideoControlsBarProps {
   state: VideoPlayerState;
   actions: VideoPlayerActions;
+  onNext?: () => void;
+  onPrevious?: () => void;
+  hasNext?: boolean;
+  hasPrevious?: boolean;
 }
 
 function formatTime(seconds: number): string {
@@ -15,7 +19,7 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export function VideoControlsBar({ state, actions }: VideoControlsBarProps) {
+export function VideoControlsBar({ state, actions, onNext, onPrevious, hasNext, hasPrevious }: VideoControlsBarProps) {
   const [visible, setVisible] = useState(true);
   const [hideTimeout, setHideTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
 
@@ -74,6 +78,15 @@ export function VideoControlsBar({ state, actions }: VideoControlsBarProps) {
       />
       <div className="flex items-center justify-between mt-2 text-white text-xs">
         <div className="flex items-center gap-2">
+          {hasPrevious && (
+            <button
+              onClick={onPrevious}
+              aria-label="Previous video"
+              className="p-1 hover:text-primary transition-colors"
+            >
+              <SkipBack className="w-4 h-4" />
+            </button>
+          )}
           <button
             onClick={actions.togglePlay}
             aria-label={state.isPlaying ? "Pause" : "Play"}
@@ -81,6 +94,15 @@ export function VideoControlsBar({ state, actions }: VideoControlsBarProps) {
           >
             {state.isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
           </button>
+          {hasNext && (
+            <button
+              onClick={onNext}
+              aria-label="Next video"
+              className="p-1 hover:text-primary transition-colors"
+            >
+              <SkipForward className="w-4 h-4" />
+            </button>
+          )}
           <VideoVolumeControl
             volume={state.volume}
             isMuted={state.isMuted}

@@ -14,10 +14,25 @@ interface VideoPlayerProps {
   poster?: string;
   autoPlay?: boolean;
   className?: string;
+  onNext?: () => void;
+  onPrevious?: () => void;
+  hasNext?: boolean;
+  hasPrevious?: boolean;
+  preloadSrc?: string;
 }
 
-export function VideoPlayer({ sources, poster, autoPlay = false, className }: VideoPlayerProps) {
-  const { videoRef, containerRef, state, actions } = useVideoPlayer();
+export function VideoPlayer({
+  sources,
+  poster,
+  autoPlay = false,
+  className,
+  onNext,
+  onPrevious,
+  hasNext = false,
+  hasPrevious = false,
+  preloadSrc,
+}: VideoPlayerProps) {
+  const { videoRef, containerRef, state, actions } = useVideoPlayer({ onEnded: autoPlay && hasNext ? onNext : undefined });
 
   if (!sources || sources.length === 0) {
     return (
@@ -50,6 +65,11 @@ export function VideoPlayer({ sources, poster, autoPlay = false, className }: Vi
         Your browser does not support the video tag.
       </video>
 
+      {/* Preload next video */}
+      {preloadSrc && (
+        <link rel="preload" as="video" href={preloadSrc} />
+      )}
+
       <VideoOverlay
         isPlaying={state.isPlaying}
         isBuffering={state.isBuffering}
@@ -62,7 +82,14 @@ export function VideoPlayer({ sources, poster, autoPlay = false, className }: Vi
       />
 
       {!state.hasError && (
-        <VideoControlsBar state={state} actions={actions} />
+        <VideoControlsBar
+          state={state}
+          actions={actions}
+          onNext={onNext}
+          onPrevious={onPrevious}
+          hasNext={hasNext}
+          hasPrevious={hasPrevious}
+        />
       )}
     </Card>
   );

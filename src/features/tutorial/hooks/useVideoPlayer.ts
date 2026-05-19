@@ -54,7 +54,12 @@ function logVideoError(errorType: VideoErrorType, message: string, retryCount: n
   console.error(`[VideoPlayer] Error — type: ${errorType}, message: ${message}, retries: ${retryCount}, src: ${src ?? "unknown"}`);
 }
 
-export function useVideoPlayer() {
+interface UseVideoPlayerOptions {
+  onEnded?: () => void;
+}
+
+export function useVideoPlayer(options: UseVideoPlayerOptions = {}) {
+  const { onEnded } = options;
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const stallTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -258,6 +263,7 @@ export function useVideoPlayer() {
       ended: () => {
         clearStallTimer();
         setState((s) => ({ ...s, isPlaying: false }));
+        onEnded?.();
       },
     };
 

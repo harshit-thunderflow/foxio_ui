@@ -1,35 +1,29 @@
 import * as React from "react"
+import { Switch as SwitchPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
-interface SwitchProps extends Omit<React.ComponentProps<"button">, "onChange"> {
-  checked?: boolean
-  onCheckedChange?: (checked: boolean) => void
-}
-
-function Switch({ className, checked = false, onCheckedChange, ...props }: SwitchProps) {
+function Switch({
+  className,
+  checked,
+  ...props
+}: React.ComponentProps<typeof SwitchPrimitive.Root>) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
+    <SwitchPrimitive.Root
       data-slot="switch"
-      data-state={checked ? "checked" : "unchecked"}
-      onClick={() => onCheckedChange?.(!checked)}
+      checked={checked}
       className={cn(
-        "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
-        checked ? "bg-primary" : "bg-input",
+        "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
         className
       )}
       {...props}
     >
-      <span
-        className={cn(
-          "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform",
-          checked ? "translate-x-4" : "translate-x-0"
-        )}
+      <SwitchPrimitive.Thumb
+        data-slot="switch-thumb"
+        className="pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform"
+        style={{ transform: checked ? "translateX(18px)" : "translateX(0)" }}
       />
-    </button>
+    </SwitchPrimitive.Root>
   )
 }
 
