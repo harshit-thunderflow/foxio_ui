@@ -3,11 +3,12 @@ import { ContextLabel } from "@/components/common/ContextLabel";
 import {
   SectionHeading,
   ProgressRail,
-  VideoPlayerCard,
+  VideoPlayer,
   PlayerControls,
   Checklist,
   VideoFooter,
 } from "./components";
+import type { VideoSource } from "./components";
 import type { ProgressStep } from "./components/ProgressRail";
 import type { ChecklistItem } from "./components/Checklist";
 
@@ -24,6 +25,13 @@ const checklistItems: ChecklistItem[] = [
   { id: "3", text: "Learn advanced usage tips", status: "pending" },
   { id: "4", text: "Explore integrations", status: "pending" },
 ];
+
+const videoSources: VideoSource[] = [
+  { src: "https://www.w3schools.com/html/mov_bbb.mp4", type: "video/mp4" },
+  { src: "https://www.w3schools.com/html/mov_bbb.webm", type: "video/webm" },
+];
+
+
 
 export function TutorialPage() {
   const [autoplay, setAutoplay] = useState(false);
@@ -46,9 +54,10 @@ export function TutorialPage() {
 
         <ProgressRail steps={steps} />
 
-        <VideoPlayerCard
-          thumbnailUrl="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80"
-          progress={40}
+        <VideoPlayer
+          sources={videoSources}
+          poster="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80"
+          autoPlay={autoplay}
         />
 
         <PlayerControls
