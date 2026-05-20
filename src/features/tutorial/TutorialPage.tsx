@@ -32,7 +32,7 @@ const playlist: PlaylistItem[] = [
     id: "1",
     title: "Introduction to Foxio",
     sources: [
-      { src: "/tutorial_video.mp4", type: "video/mp4" },
+      { src: "https://www.w3schools.com/html/mov_bbb.mp4", type: "video/mp4" },
     ],
     poster: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
   },
