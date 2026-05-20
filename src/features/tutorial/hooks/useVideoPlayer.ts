@@ -62,6 +62,9 @@ export function useVideoPlayer(options: UseVideoPlayerOptions = {}) {
   const { onEnded } = options;
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const onEndedRef = useRef(onEnded);
+  onEndedRef.current = onEnded;
+
   const stallTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const retryCountRef = useRef(0);
@@ -263,7 +266,7 @@ export function useVideoPlayer(options: UseVideoPlayerOptions = {}) {
       ended: () => {
         clearStallTimer();
         setState((s) => ({ ...s, isPlaying: false }));
-        onEnded?.();
+        onEndedRef.current?.();
       },
     };
 

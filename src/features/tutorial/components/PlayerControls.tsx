@@ -16,11 +16,11 @@ export function PlayerControls({ onPrevious, onNext, hasPrevious = true, hasNext
     <div className="flex flex-col gap-3 sm:gap-4 max-w-2xl w-full">
       <div className="flex items-center justify-between">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={onPrevious}
           disabled={!hasPrevious}
-          className="gap-1 text-primary hover:text-primary"
+          className="gap-1"
         >
           <SkipBack className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           <span className="text-xs sm:text-sm">Previous</span>

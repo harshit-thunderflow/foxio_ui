@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { useVideoPlayer } from "../../hooks";
 import { VideoOverlay } from "./VideoOverlay";
@@ -33,6 +34,30 @@ export function VideoPlayer({
   preloadSrc,
 }: VideoPlayerProps) {
   const { videoRef, containerRef, state, actions } = useVideoPlayer({ onEnded: autoPlay && hasNext ? onNext : undefined });
+  const prevSrcRef = useRef(sources[0]?.src);
+  const hasPlayedRef = useRef(false);
+
+  // Track first user-initiated play
+  useEffect(() => {
+    if (state.isPlaying && !hasPlayedRef.current) {
+      hasPlayedRef.current = true;
+    }
+  }, [state.isPlaying]);
+
+  // When sources change, load new source without remounting (preserves fullscreen)
+  useEffect(() => {
+    const newSrc = sources[0]?.src;
+    if (newSrc && newSrc !== prevSrcRef.current) {
+      prevSrcRef.current = newSrc;
+      const video = videoRef.current;
+      if (video) {
+        video.src = newSrc;
+        video.poster = poster ?? "";
+        video.load();
+        if (autoPlay && hasPlayedRef.current) video.play().catch(() => {});
+      }
+    }
+  }, [sources, poster, autoPlay, videoRef]);
 
   if (!sources || sources.length === 0) {
     return (
@@ -53,7 +78,6 @@ export function VideoPlayer({
       <video
         ref={videoRef}
         poster={poster}
-        autoPlay={autoPlay}
         playsInline
         preload="metadata"
         className="w-full h-full object-contain"

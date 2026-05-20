@@ -47,7 +47,7 @@ const colorThemeVars: Record<ColorTheme, Record<string, string>> = {
   },
   orange: {
     "--primary": "oklch(0.769 0.188 70.08)",
-    "--primary-foreground": "oklch(0.145 0 0)",
+    "--primary-foreground": "oklch(0.985 0 0)",
     "--accent": "oklch(0.962 0.044 70)",
     "--accent-foreground": "oklch(0.469 0.128 70)",
     "--card": "oklch(0.98 0.01 70)",

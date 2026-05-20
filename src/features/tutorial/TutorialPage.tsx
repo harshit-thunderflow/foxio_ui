@@ -32,7 +32,7 @@ const playlist: PlaylistItem[] = [
     id: "1",
     title: "Introduction to Foxio",
     sources: [
-      { src: "https://www.w3schools.com/html/mov_bbb.mp4", type: "video/mp4" },
+      { src: "/tutorial_video.mp4", type: "video/mp4" },
     ],
     poster: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80",
   },
@@ -63,7 +63,12 @@ const playlist: PlaylistItem[] = [
 ];
 
 export function TutorialPage() {
-  const [autoplay, setAutoplay] = useState(false);
+  const [autoplay, setAutoplay] = useState(() => localStorage.getItem("foxio-autoplay") === "true");
+
+  const handleAutoplayChange = (value: boolean) => {
+    setAutoplay(value);
+    localStorage.setItem("foxio-autoplay", String(value));
+  };
   const { state: playlistState, actions: playlistActions, nextItem } = usePlaylist(playlist);
   const { currentItem, hasNext, hasPrevious, currentIndex, total } = playlistState;
 
@@ -86,7 +91,6 @@ export function TutorialPage() {
         <ProgressRail steps={steps} />
 
         <VideoPlayer
-          key={currentItem.id}
           sources={currentItem.sources}
           poster={currentItem.poster}
           autoPlay={autoplay}
@@ -99,7 +103,7 @@ export function TutorialPage() {
 
         <PlayerControls
           autoplay={autoplay}
-          onAutoplayChange={setAutoplay}
+          onAutoplayChange={handleAutoplayChange}
           onNext={hasNext ? playlistActions.next : undefined}
           onPrevious={hasPrevious ? playlistActions.previous : undefined}
           hasNext={hasNext}
