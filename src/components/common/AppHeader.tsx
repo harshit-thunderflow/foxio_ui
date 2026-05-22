@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import { useFoxio } from "@/app/providers/FoxioProvider";
 
 export function AppHeader() {
-  const { title, onClose } = useFoxio();
+  const { title } = useFoxio();
+
+  const handleClose = () => {
+    window.parent.postMessage("foxio-close", "*");
+  };
 
   return (
     <header
@@ -14,16 +18,9 @@ export function AppHeader() {
       className="flex h-12 shrink-0 items-center justify-between px-4"
     >
       <span className="text-lg font-bold text-primary">{title}</span>
-      {onClose && (
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          onClick={onClose}
-          className="sm:hidden"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      )}
+      <Button variant="ghost" size="icon-sm" onClick={handleClose}>
+        <X className="h-4 w-4" />
+      </Button>
     </header>
   );
 }

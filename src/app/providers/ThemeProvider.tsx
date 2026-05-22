@@ -63,19 +63,28 @@ const colorThemeVars: Record<ColorTheme, Record<string, string>> = {
     "--card-foreground": "oklch(0.145 0 0)",
     "--ring": "oklch(0.585 0.233 3.958)",
   },
+  magenta: {
+    "--primary": "oklch(0.52 0.22 328)",
+    "--primary-foreground": "oklch(0.985 0 0)",
+    "--accent": "oklch(0.93 0.05 328)",
+    "--accent-foreground": "oklch(0.38 0.14 328)",
+    "--card": "oklch(0.975 0.01 328)",
+    "--card-foreground": "oklch(0.16 0.01 328)",
+    "--ring": "oklch(0.52 0.22 328)",
+  },
 };
 
 const ThemeContext = createContext<ThemeContextState>({
   theme: "light",
   setTheme: () => null,
-  colorTheme: "orange",
+  colorTheme: "magenta",
   setColorTheme: () => null,
 });
 
 export function ThemeProvider({
   children,
   defaultTheme = "light",
-  defaultColorTheme = "orange",
+  defaultColorTheme = "magenta",
   targetElement,
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);

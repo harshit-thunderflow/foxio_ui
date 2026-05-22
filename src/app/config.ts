@@ -1,4 +1,4 @@
-export type ColorTheme = "default" | "blue" | "green" | "orange" | "rose";
+export type ColorTheme = "default" | "blue" | "green" | "orange" | "rose" | "magenta";
 
 export interface FoxioConfig {
   title?: string;
@@ -6,7 +6,6 @@ export interface FoxioConfig {
   initialRoute?: string;
   theme?: "light" | "dark" | "system";
   colorTheme?: ColorTheme;
-  onClose?: () => void;
 }
 
 export const defaultConfig: FoxioConfig = {
@@ -14,5 +13,5 @@ export const defaultConfig: FoxioConfig = {
   logo: "/fox.png",
   initialRoute: "/tutorial",
   theme: "light",
-  colorTheme: "green",
+  colorTheme: "magenta",
 };

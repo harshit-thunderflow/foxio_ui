@@ -10,10 +10,10 @@ export default function App() {
           targetElement={mountNode}
           config={{
             title: "Foxio",
-            logo: "/fox.png",
+            logo: "/fox.svg",
             initialRoute: "/tutorial",
             theme: "light",
-            colorTheme: "orange",
+            colorTheme: "magenta",
           }}
         />
       )}

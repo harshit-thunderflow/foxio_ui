@@ -13,7 +13,7 @@ export function FoxioApp({ config, targetElement }: FoxioAppProps) {
   return (
     <ThemeProvider
       defaultTheme={config?.theme ?? "light"}
-      defaultColorTheme={config?.colorTheme ?? "orange"}
+      defaultColorTheme={config?.colorTheme ?? "magenta"}
       targetElement={targetElement}
     >
       <FoxioProvider config={config}>
