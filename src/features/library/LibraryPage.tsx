@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SearchBar, CategoryPills, VideoCard, LibraryFooterNav } from "./components";
+import { PageTitle } from "@/components/common/PageTitle";
 import type { VideoCardData } from "./components/VideoCard";
 
 const categories = ["All", "Setup", "Automation", "Sync", "Advanced"];
@@ -38,7 +39,8 @@ export function LibraryPage() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Search + Filters */}
-      <div className="shrink-0 space-y-3 p-3 sm:p-4">
+      <div className="shrink-0 space-y-3">
+        <PageTitle name="Library" />
         <SearchBar />
         <CategoryPills
           categories={categories}
@@ -48,7 +50,7 @@ export function LibraryPage() {
       </div>
 
       {/* Scrollable Video List */}
-      <div className="flex-1 overflow-y-auto px-3 sm:px-4 pb-4">
+      <div className="flex-1 overflow-y-auto pt-4">
         <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
           {videos.map((video) => (
             <VideoCard key={video.id} video={video} />

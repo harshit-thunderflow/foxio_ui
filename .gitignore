@@ -46,3 +46,8 @@ coverage
 # Misc
 *.tsbuildinfo
 *.pem
+
+# Browser extensions
+extension/
+extension_v1/
+extension_v2/

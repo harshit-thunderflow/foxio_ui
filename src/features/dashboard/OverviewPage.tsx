@@ -1,4 +1,5 @@
 import { HeroSection, ActiveStepCard, UpcomingSteps, HelpIllustration, OverviewFooter } from "./components";
+import { PageTitle } from "@/components/common/PageTitle";
 import type { StepItem } from "./components/UpcomingSteps";
 
 const upcomingSteps: StepItem[] = [
@@ -25,7 +26,8 @@ const upcomingSteps: StepItem[] = [
 export function OverviewPage() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 space-y-5 sm:space-y-6">
+      <div className="flex-1 overflow-y-auto space-y-4">
+        <PageTitle name="Overview" />
         <HeroSection
           contextText="Currently viewing: Getting Started Guide"
           title="Interactive Walkthrough"

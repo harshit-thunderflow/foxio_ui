@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Sparkles, Zap } from "lucide-react";
 import { ContextLabel } from "@/components/common/ContextLabel";
+import { PageTitle } from "@/components/common/PageTitle";
 import { ChatMessage, SuggestionChips, ChatInput } from "./components";
 import type { ChatMessageData } from "./components/ChatMessage";
 import type { SuggestionChip } from "./components/SuggestionChips";
@@ -54,7 +55,8 @@ export function ChatbotPage() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
+      <div className="flex-1 overflow-y-auto space-y-4">
+        <PageTitle name="Chatbot" />
         <ContextLabel
           text="Currently viewing: Getting Started Guide"
           onDismiss={() => {}}
@@ -68,7 +70,7 @@ export function ChatbotPage() {
       </div>
 
       {/* Footer: Suggestions + Input */}
-      <div className="shrink-0 border-t border-border/50 p-3 sm:p-4 space-y-2 sm:space-y-3">
+      <div className="shrink-0 border-t border-border/50 pt-3 space-y-2">
         <SuggestionChips chips={suggestions} onSelect={handleSuggestion} />
         <ChatInput onSend={handleSend} />
       </div>

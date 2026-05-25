@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ContextLabel } from "@/components/common/ContextLabel";
+import { PageTitle } from "@/components/common/PageTitle";
 import {
   SectionHeading,
   ProgressRail,
@@ -75,7 +76,8 @@ export function TutorialPage() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-5 md:space-y-6">
+      <div className="flex-1 overflow-y-auto space-y-4">
+        <PageTitle name="Tutorial" />
         <ContextLabel
           text={`Currently viewing: ${currentItem.title}`}
           onDismiss={() => {}}

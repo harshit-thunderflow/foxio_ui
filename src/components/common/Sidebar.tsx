@@ -15,10 +15,10 @@ export function Sidebar() {
   return (
     <aside
       style={{ borderRight: "1px solid var(--border)" }}
-      className="flex w-12 shrink-0 flex-col items-center py-3 sm:w-14"
+      className="flex w-12 shrink-0 flex-col items-center py-1 sm:w-14"
     >
-      <div className="mb-4 flex items-center justify-center">
-        {logo && <img src={logo} alt="Logo" className="h-6 w-6" />}
+      <div className="mb-2 flex items-center justify-center">
+        {logo && <img src={logo} alt="Logo" className="h-10 w-10" />}
       </div>
 
       <nav className="flex w-full flex-col gap-1">
