@@ -1,3 +1,9 @@
 export { useTheme } from "@/app/providers/ThemeProvider";
 export { useFoxio } from "@/app/providers/FoxioProvider";
 export { useHostUrl } from "./useHostUrl";
+export { useAuth, AuthProvider } from "./useAuth";
+export { usePublicPageContext } from "./usePublicPageContext";
+export { useCRMPageContext } from "./useCRMPageContext";
+export { usePageContext } from "@/app/providers/PageContextProvider";
+export { useProfile } from "./useProfile";
+export { useUser } from "./useUser";

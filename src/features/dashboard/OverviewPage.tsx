@@ -29,10 +29,8 @@ export function OverviewPage() {
       <div className="flex-1 overflow-y-auto space-y-4">
         <PageTitle name="Overview" />
         <HeroSection
-          contextText="Currently viewing: Getting Started Guide"
           title="Interactive Walkthrough"
           description="We'll highlight the elements on your page to show you exactly where to go."
-          onDismissContext={() => {}}
         />
 
         <ActiveStepCard

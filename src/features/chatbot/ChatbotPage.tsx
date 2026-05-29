@@ -57,10 +57,7 @@ export function ChatbotPage() {
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto space-y-4">
         <PageTitle name="Chatbot" />
-        <ContextLabel
-          text="Currently viewing: Getting Started Guide"
-          onDismiss={() => {}}
-        />
+        <ContextLabel />
 
         <div className="space-y-3 sm:space-y-4">
           {messages.map((msg) => (

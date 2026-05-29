@@ -78,10 +78,7 @@ export function TutorialPage() {
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto space-y-4">
         <PageTitle name="Tutorial" />
-        <ContextLabel
-          text={`Currently viewing: ${currentItem.title}`}
-          onDismiss={() => {}}
-        />
+        <ContextLabel />
 
         <SectionHeading
           title="Watch Tutorial"
