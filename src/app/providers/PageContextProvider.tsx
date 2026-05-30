@@ -37,12 +37,14 @@ interface PageContextState {
   crmContext: CRMPageContext | null;
   loading: boolean;
   lastUpdated: string | null;
+  labelDismissed: boolean;
 }
 
 type PageContextAction =
   | { type: "SET_PUBLIC_CONTEXT"; payload: PublicPageContext }
   | { type: "SET_CRM_CONTEXT"; payload: CRMPageContext }
   | { type: "SET_LOADING"; payload: boolean }
+  | { type: "DISMISS_LABEL" }
   | { type: "CLEAR" };
 
 const initialState: PageContextState = {
@@ -50,6 +52,7 @@ const initialState: PageContextState = {
   crmContext: null,
   loading: true,
   lastUpdated: null,
+  labelDismissed: false,
 };
 
 function reducer(state: PageContextState, action: PageContextAction): PageContextState {
@@ -60,6 +63,8 @@ function reducer(state: PageContextState, action: PageContextAction): PageContex
       return { ...state, crmContext: action.payload, loading: false, lastUpdated: new Date().toISOString() };
     case "SET_LOADING":
       return { ...state, loading: action.payload };
+    case "DISMISS_LABEL":
+      return { ...state, labelDismissed: true };
     case "CLEAR":
       return initialState;
     default:
@@ -70,11 +75,13 @@ function reducer(state: PageContextState, action: PageContextAction): PageContex
 // --- Context ---
 interface PageContextValue extends PageContextState {
   requestContext: () => void;
+  dismissLabel: () => void;
 }
 
 const PageContext = createContext<PageContextValue>({
   ...initialState,
   requestContext: () => {},
+  dismissLabel: () => {},
 });
 
 // --- Provider ---
@@ -84,6 +91,10 @@ export function PageContextProvider({ children }: { children: React.ReactNode })
   const requestContext = useCallback(() => {
     dispatch({ type: "SET_LOADING", payload: true });
     window.parent.postMessage({ type: "FOXIO_REQUEST_PAGE_CONTEXT" }, "*");
+  }, []);
+
+  const dismissLabel = useCallback(() => {
+    dispatch({ type: "DISMISS_LABEL" });
   }, []);
 
   useEffect(() => {
@@ -105,7 +116,7 @@ export function PageContextProvider({ children }: { children: React.ReactNode })
   }, [requestContext]);
 
   return (
-    <PageContext.Provider value={{ ...state, requestContext }}>
+    <PageContext.Provider value={{ ...state, requestContext, dismissLabel }}>
       {children}
     </PageContext.Provider>
   );

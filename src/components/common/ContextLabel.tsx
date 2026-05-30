@@ -1,19 +1,17 @@
-import { useState } from "react";
 import { Globe, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { usePublicPageContext } from "@/hooks";
+import { usePageContext } from "@/hooks";
 
 export function ContextLabel() {
-  const { context, loading } = usePublicPageContext();
-  const [dismissed, setDismissed] = useState(false);
+  const { publicContext, loading, labelDismissed, dismissLabel } = usePageContext();
 
-  if (dismissed) return null;
+  if (labelDismissed) return null;
 
   const label = loading
     ? "...fetching context"
-    : context?.title
-      ? `Currently Viewing: ${context.title}`
+    : publicContext?.title
+      ? `Currently Viewing: ${publicContext.title}`
       : null;
 
   if (!label) return null;
@@ -24,7 +22,7 @@ export function ContextLabel() {
       <span className="text-[11px] font-semibold text-muted-foreground truncate">
         {label}
       </span>
-      <Button variant="ghost" size="icon-xs" onClick={() => setDismissed(true)} className="h-4 w-4 rounded-full">
+      <Button variant="ghost" size="icon-xs" onClick={dismissLabel} className="h-4 w-4 rounded-full">
         <X className="w-2.5 h-2.5 text-muted-foreground" />
       </Button>
     </Badge>
