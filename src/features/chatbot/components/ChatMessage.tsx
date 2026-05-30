@@ -1,5 +1,6 @@
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Markdown from "react-markdown";
 
 export interface ChatStep {
   number: number;
@@ -10,6 +11,7 @@ export interface ChatMessageData {
   id: string;
   role: "ai" | "user";
   content: string;
+  timestamp?: string;
   steps?: ChatStep[];
   action?: { label: string; icon?: React.ReactNode };
 }
@@ -25,6 +27,11 @@ export function ChatMessage({ message, onAction }: ChatMessageProps) {
       <div className="flex justify-end">
         <div className="max-w-[80%] px-3 py-2.5 sm:px-4 sm:py-3 bg-primary text-primary-foreground rounded-xl rounded-tr-none shadow-sm">
           <p className="text-sm sm:text-base leading-relaxed">{message.content}</p>
+          {message.timestamp && (
+            <p className="text-[10px] opacity-70 text-right mt-1">
+              {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </p>
+          )}
         </div>
       </div>
     );
@@ -39,7 +46,14 @@ export function ChatMessage({ message, onAction }: ChatMessageProps) {
 
       {/* Message Bubble */}
       <div className="max-w-[80%] p-2.5 sm:p-3 rounded-xl rounded-tl-none border border-border bg-muted/40 shadow-sm space-y-2">
-        <p className="text-sm sm:text-base text-foreground leading-relaxed">{message.content}</p>
+        <div className="prose-chat text-sm sm:text-base text-foreground leading-relaxed">
+          <Markdown>{message.content}</Markdown>
+        </div>
+        {message.timestamp && (
+          <p className="text-[10px] text-muted-foreground mt-1">
+            {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          </p>
+        )}
 
         {/* Numbered Steps */}
         {message.steps && message.steps.length > 0 && (

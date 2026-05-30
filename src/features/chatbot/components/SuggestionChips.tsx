@@ -20,7 +20,7 @@ export function SuggestionChips({ chips, onSelect }: SuggestionChipsProps) {
           variant="outline"
           size="sm"
           onClick={() => onSelect(chip)}
-          className="rounded-full gap-1 text-[11px] sm:text-xs h-7 sm:h-8 px-2.5 sm:px-3"
+          className="rounded-full gap-1 text-[11px] sm:text-xs h-7 sm:h-8 px-2.5 sm:px-3 cursor-pointer"
         >
           {chip.icon}
           {chip.label}

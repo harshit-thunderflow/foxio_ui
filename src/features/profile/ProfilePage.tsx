@@ -71,10 +71,10 @@ export function ProfilePage() {
     <div className="flex flex-col min-h-0 w-full">
       <PageTitle name="Profile" />
 
-      <Card className="mt-4 !rounded-none !shadow-md w-full">
-        <CardContent className="!flex !flex-col md:!flex-row md:!items-center !gap-6 md:!gap-8 !px-6 !py-6">
+      <Card className="mt-4 rounded-none! shadow-md! w-full">
+        <CardContent className="flex! flex-col! md:flex-row! md:items-center! gap-6! md:gap-8! px-6!">
           {/* Avatar + Name */}
-          <div className="flex items-center gap-4 md:min-w-[200px]">
+          <div className="flex items-center gap-4 md:min-w-50">
             <Avatar size="lg" className="h-14 w-14">
               {profile?.profile_image ? (
                 <AvatarImage src={profile.profile_image} alt={fullName} />
@@ -131,8 +131,8 @@ export function ProfilePage() {
 
       {/* Edit Form */}
       {editing && profile && (
-        <Card className="mt-4 !rounded-none !shadow-md w-full">
-          <CardContent className="!px-6 !py-6">
+        <Card className="mt-4 rounded-none! shadow-md1 w-full">
+          <CardContent className="px-6! py-6!">
             <EditProfileForm
               profile={profile}
               onCancel={() => setEditing(false)}
