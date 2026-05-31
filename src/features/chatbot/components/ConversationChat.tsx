@@ -172,6 +172,7 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
+      <div className="w-full max-w-3xl mx-auto flex flex-col h-full overflow-hidden">
       {/* Header: back button on top, title below */}
       <div className="shrink-0 px-3 pt-2 pb-2 border-b border-border/50 space-y-1">
         <Button variant="ghost" size="sm" onClick={onBack} className="gap-1 cursor-pointer">
@@ -199,6 +200,7 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
       <div className="shrink-0 border-t border-border/50 p-3 space-y-2">
         <SuggestionChips chips={suggestions} onSelect={handleSuggestion} />
         <ChatInput onSend={handleSend} placeholder="Type your message..." />
+      </div>
       </div>
     </div>
   );

@@ -32,6 +32,7 @@ export function ConversationHistory({
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
+      <div className="w-full max-w-3xl mx-auto flex flex-col h-full overflow-hidden">
       <div className="shrink-0 px-3 py-5">
         <Button onClick={onNewChat} className="w-full gap-2 rounded-xl h-10 cursor-pointer">
           <SquarePen className="w-4 h-4" />
@@ -91,6 +92,7 @@ export function ConversationHistory({
             )}
           </>
         )}
+      </div>
       </div>
     </div>
   );
