@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { fetchUserMeApi, type UserMe } from "@/services/user";
 import { useAuth } from "./useAuth";
 
@@ -7,6 +7,9 @@ export function useUser() {
   const [userMe, setUserMe] = useState<UserMe | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logoutRef = useRef(logout);
+  const loggingOut = useRef(false);
+  logoutRef.current = logout;
 
   const fetchUser = useCallback(async () => {
     if (!isAuthenticated) return;
@@ -17,14 +20,15 @@ export function useUser() {
       setUserMe(data);
     } catch (err: any) {
       const message = err.message || "Failed to fetch user";
-      if (message === "token expired") {
-        await logout();
+      if (message === "token expired" && !loggingOut.current) {
+        loggingOut.current = true;
+        await logoutRef.current();
       }
       setError(message);
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated, logout]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     fetchUser();

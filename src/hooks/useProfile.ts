@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { fetchProfileApi, type UserProfile } from "@/services/profile";
 import { useAuth } from "./useAuth";
 
@@ -7,6 +7,9 @@ export function useProfile() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logoutRef = useRef(logout);
+  const loggingOut = useRef(false);
+  logoutRef.current = logout;
 
   const fetchProfile = useCallback(async () => {
     if (!isAuthenticated) return;
@@ -17,14 +20,15 @@ export function useProfile() {
       setProfile(data);
     } catch (err: any) {
       const message = err.message || "Failed to fetch profile";
-      if (message === "token expired") {
-        await logout();
+      if (message === "token expired" && !loggingOut.current) {
+        loggingOut.current = true;
+        await logoutRef.current();
       }
       setError(message);
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated, logout]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     fetchProfile();
