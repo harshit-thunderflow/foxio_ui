@@ -33,16 +33,25 @@ export function ChatbotPage() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(saved.conversation);
   const [isNewChat, setIsNewChat] = useState(saved.isNewChat);
   const [totalConversations, setTotalConversations] = useState(0);
+  const [localConversations, setLocalConversations] = useState<Conversation[]>([]);
 
   const refreshRecent = useCallback(() => {
     fetchConversations({ page: 1, page_size: 3 }).then((data) => {
-      if (data) setTotalConversations(data.total);
+      if (data) {
+        setTotalConversations(data.total);
+        setLocalConversations(data.items);
+      }
     }).catch(() => {});
   }, [fetchConversations]);
 
   useEffect(() => {
     refreshRecent();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Sync from hook state
+  useEffect(() => {
+    setLocalConversations(conversations);
+  }, [conversations]);
 
   const handleSelect = useCallback((conv: Conversation) => {
     setSelectedConversation(conv);
@@ -77,25 +86,47 @@ export function ChatbotPage() {
     refreshRecent();
   }, [refreshRecent]);
 
-  // --- Conversation actions ---
+  // --- Conversation actions (optimistic + API) ---
   const handleRename = useCallback(async (id: string, title: string) => {
-    await patchConversation(id, { title });
-    refreshRecent();
+    setLocalConversations((prev) =>
+      prev.map((c) => (c.conversation_id === id ? { ...c, title } : c))
+    );
+    try {
+      await patchConversation(id, { title });
+    } catch {
+      refreshRecent();
+    }
   }, [patchConversation, refreshRecent]);
 
   const handlePin = useCallback(async (id: string, pinned: boolean) => {
-    await patchConversation(id, { is_pinned: pinned });
-    refreshRecent();
+    setLocalConversations((prev) =>
+      prev.map((c) => (c.conversation_id === id ? { ...c, is_pinned: pinned } : c))
+    );
+    try {
+      await patchConversation(id, { is_pinned: pinned });
+    } catch {
+      refreshRecent();
+    }
   }, [patchConversation, refreshRecent]);
 
   const handleArchive = useCallback(async (id: string, archived: boolean) => {
-    await patchConversation(id, { is_archived: archived });
-    refreshRecent();
+    setLocalConversations((prev) => prev.filter((c) => c.conversation_id !== id));
+    try {
+      await patchConversation(id, { is_archived: archived });
+      refreshRecent();
+    } catch {
+      refreshRecent();
+    }
   }, [patchConversation, refreshRecent]);
 
   const handleDelete = useCallback(async (id: string) => {
-    await removeConversation(id);
-    refreshRecent();
+    setLocalConversations((prev) => prev.filter((c) => c.conversation_id !== id));
+    setTotalConversations((t) => Math.max(0, t - 1));
+    try {
+      await removeConversation(id);
+    } catch {
+      refreshRecent();
+    }
   }, [removeConversation, refreshRecent]);
 
   return (
@@ -108,7 +139,7 @@ export function ChatbotPage() {
           </div>
           <div className="flex-1 overflow-hidden">
             <RecentChats
-              conversations={conversations}
+              conversations={localConversations}
               loading={loading}
               onSelect={handleSelect}
               onNewChat={handleNewChat}

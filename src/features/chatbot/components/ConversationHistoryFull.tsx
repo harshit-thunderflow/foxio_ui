@@ -12,7 +12,7 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { ConversationActions } from "./ConversationActions";
+import { ConversationCard } from "./ConversationCard";
 import { useConversationHistory } from "@/hooks/useConversationHistory";
 import type { Conversation } from "@/services/chat";
 
@@ -87,13 +87,13 @@ export function ConversationHistoryFull({ onSelect, onBack, onRename, onPin, onA
 
         {/* Search */}
         <div className="shrink-0 px-3 pb-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <div className="relative flex items-center border border-border rounded-xl">
+            <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Search conversations..."
               defaultValue={query}
               onChange={handleSearch}
-              className="pl-9 h-9 rounded-xl"
+              className="pl-9 h-9 rounded-xl border-none shadow-none focus-visible:ring-0"
             />
           </div>
         </div>
@@ -117,32 +117,15 @@ export function ConversationHistoryFull({ onSelect, onBack, onRename, onPin, onA
           )}
 
           {items.map((conv) => (
-            <div
+            <ConversationCard
               key={conv.conversation_id}
-              onClick={() => onSelect(conv)}
-              className="group w-full text-left p-3 rounded-xl border border-border bg-muted/30 hover:bg-muted/60 transition-colors cursor-pointer"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <p className="text-sm font-medium text-foreground truncate flex-1">
-                  {conv.title || "Untitled"}
-                </p>
-                <ConversationActions
-                  conversation={conv}
-                  onRename={onRename}
-                  onPin={onPin}
-                  onArchive={onArchive}
-                  onDelete={onDelete}
-                />
-              </div>
-              <div className="flex items-center justify-between mt-1">
-                <span className="text-[11px] text-muted-foreground truncate max-w-[60%]">
-                  {conv.platform}
-                </span>
-                <span className="text-[10px] text-muted-foreground">
-                  {new Date(conv.updated_at).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
+              conversation={conv}
+              onSelect={onSelect}
+              onRename={onRename}
+              onPin={onPin}
+              onArchive={onArchive}
+              onDelete={onDelete}
+            />
           ))}
         </div>
 

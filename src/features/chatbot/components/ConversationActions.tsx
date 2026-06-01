@@ -1,121 +1,112 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MoreHorizontal, Pencil, Pin, Archive, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 import type { Conversation } from "@/services/chat";
 
 interface ConversationActionsProps {
   conversation: Conversation;
-  onRename: (id: string, title: string) => Promise<void>;
   onPin: (id: string, pinned: boolean) => Promise<void>;
   onArchive: (id: string, archived: boolean) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+  onStartRename: () => void;
 }
 
 export function ConversationActions({
   conversation,
-  onRename,
   onPin,
   onArchive,
   onDelete,
+  onStartRename,
 }: ConversationActionsProps) {
-  const [renaming, setRenaming] = useState(false);
-  const [title, setTitle] = useState(conversation.title);
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleRenameSubmit = useCallback(async () => {
-    const trimmed = title.trim();
-    if (trimmed && trimmed !== conversation.title) {
-      await onRename(conversation.conversation_id, trimmed);
+  useEffect(() => {
+    if (!open) return;
+
+    function handleClickOutside(e: MouseEvent) {
+      if (!containerRef.current) return;
+      // Use composedPath to handle Shadow DOM event retargeting
+      const path = e.composedPath();
+      if (!path.includes(containerRef.current)) {
+        setOpen(false);
+      }
     }
-    setRenaming(false);
-  }, [title, conversation, onRename]);
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") handleRenameSubmit();
-      if (e.key === "Escape") setRenaming(false);
-    },
-    [handleRenameSubmit]
-  );
+    const id = setTimeout(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+    }, 10);
 
-  if (renaming) {
-    return (
-      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-        <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={handleRenameSubmit}
-          autoFocus
-          className="h-6 text-xs px-1.5 rounded-md w-28"
-        />
-      </div>
-    );
-  }
+    return () => {
+      clearTimeout(id);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon-xs"
-          className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <MoreHorizontal className="w-3.5 h-3.5" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" sideOffset={4}>
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            setRenaming(true);
-          }}
-          className="cursor-pointer"
-        >
-          <Pencil className="w-3.5 h-3.5" />
-          Rename
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            onPin(conversation.conversation_id, !conversation.is_pinned);
-          }}
-          className="cursor-pointer"
-        >
-          <Pin className="w-3.5 h-3.5" />
-          {conversation.is_pinned ? "Unpin" : "Pin"}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={(e) => {
-            e.stopPropagation();
-            onArchive(conversation.conversation_id, !conversation.is_archived);
-          }}
-          className="cursor-pointer"
-        >
-          <Archive className="w-3.5 h-3.5" />
-          {conversation.is_archived ? "Unarchive" : "Archive"}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          variant="destructive"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(conversation.conversation_id);
-          }}
-          className="cursor-pointer"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div
+      ref={containerRef}
+      className="relative shrink-0"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer p-1 rounded-md hover:bg-accent"
+      >
+        <MoreHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-1 z-50 min-w-[130px] rounded-lg border border-border bg-popover p-1 shadow-md">
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onStartRename();
+            }}
+            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-popover-foreground rounded-md hover:bg-accent transition-colors cursor-pointer"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+            Rename
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onPin(conversation.conversation_id, !conversation.is_pinned);
+            }}
+            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-popover-foreground rounded-md hover:bg-accent transition-colors cursor-pointer"
+          >
+            <Pin className="w-3.5 h-3.5" />
+            {conversation.is_pinned ? "Unpin" : "Pin"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onArchive(conversation.conversation_id, !conversation.is_archived);
+            }}
+            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-popover-foreground rounded-md hover:bg-accent transition-colors cursor-pointer"
+          >
+            <Archive className="w-3.5 h-3.5" />
+            {conversation.is_archived ? "Unarchive" : "Archive"}
+          </button>
+
+          <div className="my-1 h-px bg-border" />
+
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              onDelete(conversation.conversation_id);
+            }}
+            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-destructive rounded-md hover:bg-destructive/10 transition-colors cursor-pointer"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            Delete
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

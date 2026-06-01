@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { SquarePen, MessageCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/common/Loader";
-import { ConversationActions } from "./ConversationActions";
+import { ConversationCard } from "./ConversationCard";
 import type { Conversation } from "@/services/chat";
 
 interface RecentChatsProps {
@@ -64,32 +64,15 @@ export function RecentChats({
               </div>
 
               {visible.map((conv) => (
-                <div
+                <ConversationCard
                   key={conv.conversation_id}
-                  onClick={() => onSelect(conv)}
-                  className="group w-full text-left p-3 rounded-xl border border-border bg-muted/30 hover:bg-muted/60 transition-colors cursor-pointer"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="text-sm font-medium text-foreground truncate flex-1">
-                      {conv.title || "Untitled"}
-                    </p>
-                    <ConversationActions
-                      conversation={conv}
-                      onRename={onRename}
-                      onPin={onPin}
-                      onArchive={onArchive}
-                      onDelete={onDelete}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between mt-1">
-                    <span className="text-[11px] text-muted-foreground truncate max-w-[60%]">
-                      {conv.platform}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground">
-                      {new Date(conv.updated_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
+                  conversation={conv}
+                  onSelect={onSelect}
+                  onRename={onRename}
+                  onPin={onPin}
+                  onArchive={onArchive}
+                  onDelete={onDelete}
+                />
               ))}
 
               {total > SHOW_COUNT && (
