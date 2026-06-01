@@ -8,3 +8,4 @@ export { usePageContext } from "@/app/providers/PageContextProvider";
 export { useProfile } from "./useProfile";
 export { useUser } from "./useUser";
 export { useChat } from "./useChat";
+export { useConversationHistory } from "./useConversationHistory";

@@ -6,6 +6,8 @@ import {
   createContextSnapshot,
   sendMessage,
   sendFeedback,
+  updateConversation as updateConversationApi,
+  deleteConversation as deleteConversationApi,
 } from "@/services/chat";
 import type {
   Conversation,
@@ -17,6 +19,11 @@ import type {
   SendMessageRequest,
   SendFeedbackRequest,
   FeedbackResponse,
+  GetConversationsParams,
+  PaginatedConversationsResponse,
+  GetMessagesParams,
+  PaginatedMessagesResponse,
+  UpdateConversationRequest,
 } from "@/services/chat";
 
 export function useChat() {
@@ -45,13 +52,13 @@ export function useChat() {
     []
   );
 
-  const fetchConversations = useCallback(async () => {
+  const fetchConversations = useCallback(async (params: GetConversationsParams = {}) => {
     setLoading(true);
     setError(null);
     try {
-      const list = await getConversations();
-      setConversations(list);
-      return list;
+      const data: PaginatedConversationsResponse = await getConversations(params);
+      setConversations(data.items);
+      return data;
     } catch (e: any) {
       setError(e.message);
       throw e;
@@ -60,13 +67,13 @@ export function useChat() {
     }
   }, []);
 
-  const fetchMessages = useCallback(async (conversationId: string) => {
+  const fetchMessages = useCallback(async (conversationId: string, params: GetMessagesParams = {}) => {
     setLoading(true);
     setError(null);
     try {
-      const msgs = await getMessages(conversationId);
-      setMessages(msgs);
-      return msgs;
+      const data: PaginatedMessagesResponse = await getMessages(conversationId, params);
+      setMessages(data.items);
+      return data;
     } catch (e: any) {
       setError(e.message);
       throw e;
@@ -120,6 +127,33 @@ export function useChat() {
     []
   );
 
+  const patchConversation = useCallback(
+    async (conversationId: string, data: UpdateConversationRequest): Promise<Conversation> => {
+      setError(null);
+      try {
+        return await updateConversationApi(conversationId, data);
+      } catch (e: any) {
+        setError(e.message);
+        throw e;
+      }
+    },
+    []
+  );
+
+  const removeConversation = useCallback(
+    async (conversationId: string): Promise<void> => {
+      setError(null);
+      try {
+        await deleteConversationApi(conversationId);
+        setConversations((prev) => prev.filter((c) => c.conversation_id !== conversationId));
+      } catch (e: any) {
+        setError(e.message);
+        throw e;
+      }
+    },
+    []
+  );
+
   return {
     conversations,
     conversation,
@@ -133,5 +167,7 @@ export function useChat() {
     storeContext,
     send,
     submitFeedback,
+    patchConversation,
+    removeConversation,
   };
 }

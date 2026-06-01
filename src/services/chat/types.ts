@@ -10,8 +10,36 @@ export interface Conversation {
   title: string;
   platform: string;
   source_url: string;
+  is_pinned: boolean;
+  is_archived: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface ConversationDetail extends Conversation {
+  message_count: number;
+  last_message_at: string;
+}
+
+export interface UpdateConversationRequest {
+  title?: string;
+  is_pinned?: boolean;
+  is_archived?: boolean;
+}
+
+export interface GetConversationsParams {
+  q?: string;
+  page?: number;
+  page_size?: number;
+  archived?: boolean;
+}
+
+export interface PaginatedConversationsResponse {
+  items: Conversation[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
 }
 
 // --- Messages ---
@@ -20,6 +48,19 @@ export interface Message {
   role: string;
   content: string;
   created_at: string;
+}
+
+export interface GetMessagesParams {
+  page?: number;
+  page_size?: number;
+}
+
+export interface PaginatedMessagesResponse {
+  items: Message[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
 }
 
 // --- Context Snapshot ---

@@ -35,7 +35,7 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
   const { publicContext } = usePageContext();
 
   const [messages, setMessages] = useState<ChatMessageData[]>([]);
-  const [initializing, setInitializing] = useState(true);
+  const [initializing, setInitializing] = useState(!isNewChat);
   const [sending, setSending] = useState(false);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(
     conversation?.conversation_id || null
@@ -43,6 +43,7 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
   const [contextId, setContextId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const initRef = useRef(false);
+  const creatingRef = useRef(false);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -52,15 +53,16 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
+  // Only load existing conversation on mount; new chats are lazily initialized on first send
   useEffect(() => {
     if (initRef.current) return;
     initRef.current = true;
 
-    async function init() {
-      if (!isNewChat && conversation) {
+    if (!isNewChat && conversation) {
+      (async () => {
         try {
-          const msgs = await fetchMessages(conversation.conversation_id);
-          setMessages(mapApiMessages(msgs));
+          const data = await fetchMessages(conversation.conversation_id, { page: 1, page_size: 50 });
+          setMessages(mapApiMessages(data.items));
           setActiveConversationId(conversation.conversation_id);
           if (publicContext) {
             const snapshot = await storeContext({
@@ -72,46 +74,48 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
           }
         } catch {
           // error handled by hook
+        } finally {
+          setInitializing(false);
         }
-      } else {
-        try {
-          if (!publicContext) {
-            setInitializing(false);
-            return;
-          }
-
-          const conv = await startConversation({
-            platform: publicContext.metadata.site,
-            source_url: publicContext.url,
-            page_title: publicContext.title,
-          });
-
-          setActiveConversationId(conv.conversation_id);
-
-          const snapshot = await storeContext({
-            conversation_id: conv.conversation_id,
-            platform: publicContext.metadata.site,
-            page_context: publicContext,
-          });
-
-          setContextId(snapshot.context_id);
-          const msgs = await fetchMessages(conv.conversation_id);
-          setMessages(mapApiMessages(msgs));
-        } catch {
-          // error handled by hook
-        }
-      }
-
-      setInitializing(false);
+      })();
     }
-
-    init();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Lazily create conversation + context on first message for new chats
+  const ensureConversation = useCallback(async (): Promise<{ convId: string; ctxId: string } | null> => {
+    if (activeConversationId && contextId) {
+      return { convId: activeConversationId, ctxId: contextId };
+    }
+    if (creatingRef.current) return null;
+    creatingRef.current = true;
+
+    try {
+      if (!publicContext) return null;
+
+      const conv = await startConversation({
+        platform: publicContext.metadata.site,
+        source_url: publicContext.url,
+        page_title: publicContext.title,
+      });
+      setActiveConversationId(conv.conversation_id);
+
+      const snapshot = await storeContext({
+        conversation_id: conv.conversation_id,
+        platform: publicContext.metadata.site,
+        page_context: publicContext,
+      });
+      setContextId(snapshot.context_id);
+
+      return { convId: conv.conversation_id, ctxId: snapshot.context_id };
+    } catch {
+      return null;
+    } finally {
+      creatingRef.current = false;
+    }
+  }, [activeConversationId, contextId, publicContext, startConversation, storeContext]);
 
   const handleSend = useCallback(
     async (text: string) => {
-      if (!activeConversationId || !contextId) return;
-
       const userMsg: ChatMessageData = {
         id: `user-${Date.now()}`,
         role: "user",
@@ -122,9 +126,12 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
       setSending(true);
 
       try {
+        const ids = await ensureConversation();
+        if (!ids) throw new Error("Could not initialize conversation");
+
         const response = await send({
-          conversation_id: activeConversationId,
-          context_id: contextId,
+          conversation_id: ids.convId,
+          context_id: ids.ctxId,
           message: text,
         });
 
@@ -147,7 +154,7 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
         setSending(false);
       }
     },
-    [activeConversationId, contextId, send]
+    [ensureConversation, send]
   );
 
   const handleSuggestion = useCallback(
