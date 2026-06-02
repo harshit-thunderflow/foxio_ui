@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SearchBar, CategoryPills, VideoCard, LibraryFooterNav } from "./components";
-import { PageTitle } from "@/components/common/PageTitle";
+import { usePageTitle } from "@/hooks";
 import type { VideoCardData } from "./components/VideoCard";
 
 const categories = ["All", "Setup", "Automation", "Sync", "Advanced"];
@@ -34,13 +34,13 @@ const videos: VideoCardData[] = [
 ];
 
 export function LibraryPage() {
+  usePageTitle("Library");
   const [activeCategory, setActiveCategory] = useState("All");
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Search + Filters */}
       <div className="shrink-0 space-y-3">
-        <PageTitle name="Library" />
         <SearchBar />
         <CategoryPills
           categories={categories}

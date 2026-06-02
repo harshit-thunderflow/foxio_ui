@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { PageTitle } from "@/components/common/PageTitle";
+import { usePageTitle } from "@/hooks";
 import { ContextLabel } from "@/components/common/ContextLabel";
 import { RecentChats, ConversationHistoryFull, ConversationChat } from "./components";
 import { useChat } from "@/hooks";
@@ -26,6 +26,7 @@ function clearState() {
 }
 
 export function ChatbotPage() {
+  usePageTitle("Chatbot");
   const { conversations, fetchConversations, loading, patchConversation, removeConversation } = useChat();
 
   const saved = getSavedState();
@@ -133,7 +134,6 @@ export function ChatbotPage() {
       {view === "recent" && (
         <>
           <div className="shrink-0 px-3 pt-2 space-y-2">
-            <PageTitle name="Chatbot" />
             <ContextLabel />
           </div>
           <div className="flex-1 overflow-hidden">
@@ -156,7 +156,6 @@ export function ChatbotPage() {
       {view === "full-history" && (
         <>
           <div className="shrink-0 px-3 pt-2 space-y-2">
-            <PageTitle name="Chatbot" />
             <ContextLabel />
           </div>
           <div className="flex-1 overflow-hidden">

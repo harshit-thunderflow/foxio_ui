@@ -2,7 +2,7 @@ import { MemoryRouter } from "react-router-dom";
 import { ThemeProvider } from "@/app/providers/ThemeProvider";
 import { FoxioProvider } from "@/app/providers/FoxioProvider";
 import { PageContextProvider } from "@/app/providers/PageContextProvider";
-import { AuthProvider } from "@/hooks";
+import { AuthProvider, PageTitleProvider } from "@/hooks";
 import { AppRoutes } from "@/app/router/AppRoutes";
 import { type FoxioConfig } from "@/app/config";
 
@@ -21,9 +21,11 @@ export function FoxioApp({ config, targetElement }: FoxioAppProps) {
       <FoxioProvider config={config}>
         <AuthProvider>
           <PageContextProvider>
-            <MemoryRouter initialEntries={[config?.initialRoute ?? "/tutorial"]}>
-              <AppRoutes />
-            </MemoryRouter>
+            <PageTitleProvider>
+              <MemoryRouter initialEntries={[config?.initialRoute ?? "/tutorial"]}>
+                <AppRoutes />
+              </MemoryRouter>
+            </PageTitleProvider>
           </PageContextProvider>
         </AuthProvider>
       </FoxioProvider>

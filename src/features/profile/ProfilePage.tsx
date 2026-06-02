@@ -1,6 +1,5 @@
-import { useAuth, useProfile } from "@/hooks";
+import { useAuth, useProfile, usePageTitle } from "@/hooks";
 import { LoginForm } from "@/components/common/LoginForm";
-import { PageTitle } from "@/components/common/PageTitle";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { useState, useCallback } from "react";
 import { EditProfileForm } from "./components/EditProfileForm";
 
 export function ProfilePage() {
+  usePageTitle("Profile");
   const { isAuthenticated, user, logout } = useAuth();
   const { profile, loading, error, refetch } = useProfile();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -69,7 +69,6 @@ export function ProfilePage() {
 
   return (
     <div className="flex flex-col min-h-0 w-full">
-      <PageTitle name="Profile" />
 
       <Card className="mt-4 rounded-none! shadow-md! w-full">
         <CardContent className="flex! flex-col! md:flex-row! md:items-center! gap-6! md:gap-8! px-6!">

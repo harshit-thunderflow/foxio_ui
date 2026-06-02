@@ -2,9 +2,11 @@ import { X, Maximize2, Minimize2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useFoxio } from "@/app/providers/FoxioProvider";
+import { useCurrentPageTitle } from "@/hooks";
 
 export function AppHeader() {
   const { title } = useFoxio();
+  const pageTitle = useCurrentPageTitle();
   const [isMaximized, setIsMaximized] = useState(false);
 
   const handleClose = () => {
@@ -23,9 +25,14 @@ export function AppHeader() {
         borderBottom: "1px solid var(--border)",
         boxShadow: "0 2px 6px -1px rgba(0,0,0,0.08)",
       }}
-      className="flex h-12 shrink-0 items-center justify-between px-4"
+      className="flex h-12 md:h-14 shrink-0 items-center justify-between px-4"
     >
-      <span className="text-lg font-bold text-primary">{title}</span>
+      <span className="text-lg font-bold text-primary">
+        {title}
+        {pageTitle && (
+          <span className="text-sm font-normal text-muted-foreground"> / {pageTitle}</span>
+        )}
+      </span>
       <div className="flex items-center gap-1">
         <Button variant="ghost" size="icon-sm" onClick={handleToggleMaximize}>
           {isMaximized ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}

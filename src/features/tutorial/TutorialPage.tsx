@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ContextLabel } from "@/components/common/ContextLabel";
-import { PageTitle } from "@/components/common/PageTitle";
+import { usePageTitle } from "@/hooks";
 import {
   SectionHeading,
   ProgressRail,
@@ -64,6 +64,7 @@ const playlist: PlaylistItem[] = [
 ];
 
 export function TutorialPage() {
+  usePageTitle("Tutorial");
   const [autoplay, setAutoplay] = useState(() => localStorage.getItem("foxio-autoplay") === "true");
 
   const handleAutoplayChange = (value: boolean) => {
@@ -77,7 +78,6 @@ export function TutorialPage() {
     <div className="flex flex-col h-full overflow-hidden">
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto space-y-4">
-        <PageTitle name="Tutorial" />
         <ContextLabel />
 
         <SectionHeading
