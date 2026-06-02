@@ -1,22 +1,14 @@
-import { API_BASE_URL } from "../api";
-import { tokenStorage } from "../token";
+import { authFetch } from "../authFetch";
 import type { SendFeedbackRequest, FeedbackResponse } from "./types";
 
 export async function sendFeedback(
   messageId: string,
   data: SendFeedbackRequest
 ): Promise<FeedbackResponse> {
-  const res = await fetch(
-    `${API_BASE_URL}/messages/${messageId}/feedback`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${tokenStorage.getToken()}`,
-      },
-      body: JSON.stringify(data),
-    }
-  );
+  const res = await authFetch(`/messages/${messageId}/feedback`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: "Failed to send feedback" }));

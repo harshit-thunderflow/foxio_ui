@@ -8,6 +8,15 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   access_token: string;
+  refresh_token: string;
+  token_type: string;
+  user_id: string;
+  email: string;
+}
+
+export interface RefreshResponse {
+  access_token: string;
+  refresh_token: string;
   token_type: string;
   user_id: string;
   email: string;
@@ -23,6 +32,20 @@ export async function loginApi(data: LoginRequest): Promise<LoginResponse> {
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: "Login failed" }));
     throw new Error(err.detail || "Login failed");
+  }
+
+  return res.json();
+}
+
+export async function refreshTokenApi(refresh_token: string): Promise<RefreshResponse> {
+  const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refresh_token }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Token refresh failed");
   }
 
   return res.json();

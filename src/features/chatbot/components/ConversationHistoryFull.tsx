@@ -26,8 +26,28 @@ interface ConversationHistoryFullProps {
 }
 
 export function ConversationHistoryFull({ onSelect, onBack, onRename, onPin, onArchive, onDelete }: ConversationHistoryFullProps) {
-  const { items, page, totalPages, loading, error, search, goToPage, query } =
+  const { items, page, totalPages, loading, error, search, goToPage, query, refresh } =
     useConversationHistory();
+
+  const handleRename = useCallback(async (id: string, title: string) => {
+    await onRename(id, title);
+    refresh();
+  }, [onRename, refresh]);
+
+  const handlePin = useCallback(async (id: string, pinned: boolean) => {
+    await onPin(id, pinned);
+    refresh();
+  }, [onPin, refresh]);
+
+  const handleArchive = useCallback(async (id: string, archived: boolean) => {
+    await onArchive(id, archived);
+    refresh();
+  }, [onArchive, refresh]);
+
+  const handleDelete = useCallback(async (id: string) => {
+    await onDelete(id);
+    refresh();
+  }, [onDelete, refresh]);
 
   const handleSearch = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,10 +141,10 @@ export function ConversationHistoryFull({ onSelect, onBack, onRename, onPin, onA
               key={conv.conversation_id}
               conversation={conv}
               onSelect={onSelect}
-              onRename={onRename}
-              onPin={onPin}
-              onArchive={onArchive}
-              onDelete={onDelete}
+              onRename={handleRename}
+              onPin={handlePin}
+              onArchive={handleArchive}
+              onDelete={handleDelete}
             />
           ))}
         </div>

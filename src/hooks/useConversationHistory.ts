@@ -65,5 +65,5 @@ export function useConversationHistory() {
     };
   }, [fetchPage]);
 
-  return { items, page, totalPages, total, query, loading, error, search, goToPage };
+  return { items, page, totalPages, total, query, loading, error, search, goToPage, refresh: () => fetchPage(page, query) };
 }

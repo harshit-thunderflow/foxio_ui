@@ -9,3 +9,4 @@ export { useProfile } from "./useProfile";
 export { useUser } from "./useUser";
 export { useChat } from "./useChat";
 export { useConversationHistory } from "./useConversationHistory";
+export { useAuthFetch } from "./useAuthFetch";

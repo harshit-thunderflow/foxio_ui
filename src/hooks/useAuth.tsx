@@ -37,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await loginApi({ email, password });
       tokenStorage.setToken(res.access_token);
+      tokenStorage.setRefreshToken(res.refresh_token);
       tokenStorage.setUser({ user_id: res.user_id, email: res.email });
       setUser({ user_id: res.user_id, email: res.email });
       setIsAuthenticated(true);
@@ -58,6 +59,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     tokenStorage.clear();
     setUser(null);
     setIsAuthenticated(false);
+  }, []);
+
+  useEffect(() => {
+    const onExpired = () => {
+      tokenStorage.clear();
+      setUser(null);
+      setIsAuthenticated(false);
+    };
+    window.addEventListener("foxio:session-expired", onExpired);
+    return () => window.removeEventListener("foxio:session-expired", onExpired);
   }, []);
 
   return (

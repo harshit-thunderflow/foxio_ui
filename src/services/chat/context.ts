@@ -1,16 +1,11 @@
-import { API_BASE_URL } from "../api";
-import { tokenStorage } from "../token";
+import { authFetch } from "../authFetch";
 import type { CreateContextSnapshotRequest, ContextSnapshot } from "./types";
 
 export async function createContextSnapshot(
   data: CreateContextSnapshotRequest
 ): Promise<ContextSnapshot> {
-  const res = await fetch(`${API_BASE_URL}/context/snapshot`, {
+  const res = await authFetch("/context/snapshot", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${tokenStorage.getToken()}`,
-    },
     body: JSON.stringify(data),
   });
 

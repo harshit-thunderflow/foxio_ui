@@ -1,16 +1,11 @@
-import { API_BASE_URL } from "../api";
-import { tokenStorage } from "../token";
+import { authFetch } from "../authFetch";
 import type { SendMessageRequest, ChatResponse } from "./types";
 
 export async function sendMessage(
   data: SendMessageRequest
 ): Promise<ChatResponse> {
-  const res = await fetch(`${API_BASE_URL}/chat/message`, {
+  const res = await authFetch("/chat/message", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${tokenStorage.getToken()}`,
-    },
     body: JSON.stringify(data),
   });
 

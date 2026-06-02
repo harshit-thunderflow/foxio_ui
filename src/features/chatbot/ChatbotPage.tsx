@@ -93,6 +93,7 @@ export function ChatbotPage() {
     );
     try {
       await patchConversation(id, { title });
+      refreshRecent();
     } catch {
       refreshRecent();
     }
@@ -104,6 +105,7 @@ export function ChatbotPage() {
     );
     try {
       await patchConversation(id, { is_pinned: pinned });
+      refreshRecent();
     } catch {
       refreshRecent();
     }
@@ -113,10 +115,8 @@ export function ChatbotPage() {
     setLocalConversations((prev) => prev.filter((c) => c.conversation_id !== id));
     try {
       await patchConversation(id, { is_archived: archived });
-      refreshRecent();
-    } catch {
-      refreshRecent();
-    }
+    } catch {}
+    refreshRecent();
   }, [patchConversation, refreshRecent]);
 
   const handleDelete = useCallback(async (id: string) => {
@@ -124,9 +124,8 @@ export function ChatbotPage() {
     setTotalConversations((t) => Math.max(0, t - 1));
     try {
       await removeConversation(id);
-    } catch {
-      refreshRecent();
-    }
+    } catch {}
+    refreshRecent();
   }, [removeConversation, refreshRecent]);
 
   return (

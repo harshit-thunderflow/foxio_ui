@@ -1,5 +1,4 @@
-import { API_BASE_URL } from "../api";
-import { tokenStorage } from "../token";
+import { authFetch } from "../authFetch";
 import type {
   CreateConversationRequest,
   Conversation,
@@ -12,17 +11,11 @@ import type {
   PaginatedMessagesResponse,
 } from "./types";
 
-const headers = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${tokenStorage.getToken()}`,
-});
-
 export async function createConversation(
   data: CreateConversationRequest
 ): Promise<Conversation> {
-  const res = await fetch(`${API_BASE_URL}/conversations`, {
+  const res = await authFetch("/conversations", {
     method: "POST",
-    headers: headers(),
     body: JSON.stringify(data),
   });
 
@@ -43,10 +36,7 @@ export async function getConversations(
   searchParams.set("page_size", String(params.page_size ?? 10));
   if (params.archived) searchParams.set("archived", "true");
 
-  const res = await fetch(
-    `${API_BASE_URL}/conversations?${searchParams.toString()}`,
-    { headers: headers() }
-  );
+  const res = await authFetch(`/conversations?${searchParams.toString()}`);
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: "Failed to fetch conversations" }));
@@ -64,9 +54,8 @@ export async function getMessages(
   searchParams.set("page", String(params.page ?? 1));
   searchParams.set("page_size", String(params.page_size ?? 50));
 
-  const res = await fetch(
-    `${API_BASE_URL}/conversations/${conversationId}/messages?${searchParams.toString()}`,
-    { headers: headers() }
+  const res = await authFetch(
+    `/conversations/${conversationId}/messages?${searchParams.toString()}`
   );
 
   if (!res.ok) {
@@ -80,10 +69,7 @@ export async function getMessages(
 export async function getConversation(
   conversationId: string
 ): Promise<ConversationDetail> {
-  const res = await fetch(
-    `${API_BASE_URL}/conversations/${conversationId}`,
-    { headers: headers() }
-  );
+  const res = await authFetch(`/conversations/${conversationId}`);
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: "Failed to fetch conversation" }));
@@ -97,14 +83,10 @@ export async function updateConversation(
   conversationId: string,
   data: UpdateConversationRequest
 ): Promise<Conversation> {
-  const res = await fetch(
-    `${API_BASE_URL}/conversations/${conversationId}`,
-    {
-      method: "PATCH",
-      headers: headers(),
-      body: JSON.stringify(data),
-    }
-  );
+  const res = await authFetch(`/conversations/${conversationId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: "Failed to update conversation" }));
@@ -117,13 +99,9 @@ export async function updateConversation(
 export async function deleteConversation(
   conversationId: string
 ): Promise<void> {
-  const res = await fetch(
-    `${API_BASE_URL}/conversations/${conversationId}`,
-    {
-      method: "DELETE",
-      headers: headers(),
-    }
-  );
+  const res = await authFetch(`/conversations/${conversationId}`, {
+    method: "DELETE",
+  });
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: "Failed to delete conversation" }));
