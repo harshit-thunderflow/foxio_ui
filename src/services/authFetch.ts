@@ -30,15 +30,20 @@ export async function authFetch(
 ): Promise<Response> {
   const url = input.startsWith("http") ? input : `${API_BASE_URL}${input}`;
 
-  const makeRequest = () =>
-    fetch(url, {
+  const makeRequest = () => {
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${tokenStorage.getToken()}`,
+      ...(init.headers as Record<string, string>),
+    };
+    // Only set Content-Type if not FormData (browser sets it with boundary)
+    if (!(init.body instanceof FormData)) {
+      headers["Content-Type"] = headers["Content-Type"] || "application/json";
+    }
+    return fetch(url, {
       ...init,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${tokenStorage.getToken()}`,
-        ...(init.headers as Record<string, string>),
-      },
+      headers,
     });
+  };
 
   const res = await makeRequest();
 

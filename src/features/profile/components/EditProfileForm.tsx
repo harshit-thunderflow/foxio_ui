@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/common/Loader";
 import { DiscardModal } from "@/components/common/DiscardModal";
 import { updateProfileApi, type UpdateProfileRequest } from "@/services/profile";
+import { useToast } from "@/hooks/useToast";
 import type { UserProfile } from "@/services/profile";
 
 interface EditProfileFormProps {
@@ -22,8 +23,8 @@ export function EditProfileForm({ profile, onCancel, onSuccess }: EditProfileFor
     country: profile.country || "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showDiscard, setShowDiscard] = useState(false);
+  const { toast } = useToast();
 
   const isDirty = () => {
     return (
@@ -37,22 +38,22 @@ export function EditProfileForm({ profile, onCancel, onSuccess }: EditProfileFor
   };
 
   const handleCancel = () => {
-    if (isDirty()) {
-      setShowDiscard(true);
-    } else {
-      onCancel();
-    }
+    if (isDirty()) setShowDiscard(true);
+    else onCancel();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
     try {
-      await updateProfileApi(form);
+      const payload = Object.fromEntries(
+        Object.entries(form).filter(([_, v]) => v !== "")
+      );
+      await updateProfileApi(payload);
+      toast("Profile updated successfully", "success");
       onSuccess();
     } catch (err: any) {
-      setError(err.message || "Failed to update profile");
+      toast(err.message || "Failed to update profile", "error");
     } finally {
       setLoading(false);
     }
@@ -74,8 +75,6 @@ export function EditProfileForm({ profile, onCancel, onSuccess }: EditProfileFor
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && <p className="text-xs text-destructive text-center">{error}</p>}
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {fields.map(({ key, label, placeholder, type }) => (
             <div key={key} className="space-y-2">

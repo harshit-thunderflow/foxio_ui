@@ -3,10 +3,10 @@ import { LoginForm } from "@/components/common/LoginForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { LogOut, Phone, Calendar, MapPin, User, Loader2, Pencil } from "lucide-react";
 import { useState, useCallback } from "react";
 import { EditProfileForm } from "./components/EditProfileForm";
+import { ProfileAvatarEditor } from "./components/ProfileAvatarEditor";
 
 export function ProfilePage() {
   usePageTitle("Profile");
@@ -74,12 +74,11 @@ export function ProfilePage() {
         <CardContent className="flex! flex-col! md:flex-row! md:items-center! gap-6! md:gap-8! px-6!">
           {/* Avatar + Name */}
           <div className="flex items-center gap-4 md:min-w-50">
-            <Avatar size="lg" className="h-14 w-14">
-              {profile?.profile_image ? (
-                <AvatarImage src={profile.profile_image} alt={fullName} />
-              ) : null}
-              <AvatarFallback className="text-base font-semibold">{initials}</AvatarFallback>
-            </Avatar>
+            <ProfileAvatarEditor
+              currentImage={profile?.profile_image || null}
+              initials={initials}
+              onUpdated={refetch}
+            />
             <div className="min-w-0">
               <p className="text-sm font-semibold text-card-foreground truncate">{fullName}</p>
               <p className="text-xs text-muted-foreground truncate">{user?.email}</p>

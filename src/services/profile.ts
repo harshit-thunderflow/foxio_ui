@@ -21,6 +21,7 @@ export interface UpdateProfileRequest {
   date_of_birth?: string;
   gender?: string;
   country?: string;
+  profile_image?: string;
 }
 
 export async function updateProfileApi(data: UpdateProfileRequest): Promise<UserProfile> {
@@ -31,7 +32,10 @@ export async function updateProfileApi(data: UpdateProfileRequest): Promise<User
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: "Failed to update profile" }));
-    throw new Error(err.detail || "Failed to update profile");
+    const msg = Array.isArray(err.detail)
+      ? err.detail.map((d: any) => d.msg).join(", ")
+      : err.detail || "Failed to update profile";
+    throw new Error(msg);
   }
 
   return res.json();

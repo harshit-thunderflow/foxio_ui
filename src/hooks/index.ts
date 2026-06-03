@@ -10,4 +10,6 @@ export { useUser } from "./useUser";
 export { useChat } from "./useChat";
 export { useConversationHistory } from "./useConversationHistory";
 export { useAuthFetch } from "./useAuthFetch";
+export { useUpload } from "./useUpload";
+export { useToast } from "./useToast";
 export { usePageTitle, useCurrentPageTitle, PageTitleProvider } from "./usePageTitle";
