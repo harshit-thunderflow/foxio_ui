@@ -22,7 +22,7 @@ export function CropDialog({ open, onOpenChange, imageSrc, uploading, onUpload }
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) handleClose(); }}>
-      <DialogContent className="max-w-[280px]">
+      <DialogContent className="max-w-70">
         <DialogHeader>
           <DialogTitle>Crop & Upload</DialogTitle>
         </DialogHeader>

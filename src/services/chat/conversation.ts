@@ -4,7 +4,6 @@ import type {
   Conversation,
   ConversationDetail,
   UpdateConversationRequest,
-  Message,
   GetConversationsParams,
   PaginatedConversationsResponse,
   GetMessagesParams,

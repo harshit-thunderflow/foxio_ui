@@ -57,7 +57,7 @@ export function CameraDialog({ open, onOpenChange, onCapture, onError }: CameraD
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[280px]">
+      <DialogContent className="max-w-70">
         <DialogHeader>
           <DialogTitle>Take Photo</DialogTitle>
         </DialogHeader>

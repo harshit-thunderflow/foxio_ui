@@ -49,7 +49,7 @@ export function ToastContainer() {
   };
 
   return (
-    <div className="absolute top-20 right-3 z-[9999] flex flex-col gap-2 pointer-events-none max-w-[280px]">
+    <div className="absolute top-20 right-3 z-9999 flex flex-col gap-2 pointer-events-none max-w-70">
       {toasts.map((t) => (
         <div
           key={t.id}
