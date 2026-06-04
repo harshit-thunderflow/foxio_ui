@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { ZoomIn, ZoomOut, Loader2 } from "lucide-react";
 
@@ -36,20 +37,19 @@ export function CropDialog({ open, onOpenChange, imageSrc, uploading, onUpload }
               />
             )}
           </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setZoom((z) => Math.max(1, z - 0.1))} className="text-muted-foreground hover:text-foreground">
+          <div className="flex items-center gap-2 w-full px-2">
+            <button onClick={() => setZoom((z) => Math.max(1, +(z - 0.1).toFixed(1)))} className="text-muted-foreground hover:text-foreground">
               <ZoomOut className="h-4 w-4" />
             </button>
-            <input
-              type="range"
-              min="1"
-              max="3"
-              step="0.1"
-              value={zoom}
-              onChange={(e) => setZoom(parseFloat(e.target.value))}
-              className="w-24 accent-primary"
+            <Slider
+              min={100}
+              max={300}
+              step={10}
+              value={[zoom * 100]}
+              onValueChange={([v]) => setZoom(v / 100)}
+              className="flex-1"
             />
-            <button onClick={() => setZoom((z) => Math.min(3, z + 0.1))} className="text-muted-foreground hover:text-foreground">
+            <button onClick={() => setZoom((z) => Math.min(3, +(z + 0.1).toFixed(1)))} className="text-muted-foreground hover:text-foreground">
               <ZoomIn className="h-4 w-4" />
             </button>
           </div>

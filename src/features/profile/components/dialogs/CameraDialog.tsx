@@ -7,9 +7,10 @@ interface CameraDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCapture: (dataUrl: string) => void;
+  onError: (message: string) => void;
 }
 
-export function CameraDialog({ open, onOpenChange, onCapture }: CameraDialogProps) {
+export function CameraDialog({ open, onOpenChange, onCapture, onError }: CameraDialogProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -30,8 +31,12 @@ export function CameraDialog({ open, onOpenChange, onCapture }: CameraDialogProp
       setTimeout(() => {
         if (videoRef.current) videoRef.current.srcObject = stream;
       }, 100);
-    } catch {
+    } catch (err: any) {
       onOpenChange(false);
+      const msg = err.name === "NotAllowedError"
+        ? "Camera access blocked. The host page may restrict camera in iframes."
+        : "Could not access camera";
+      onError(msg);
     }
   };
 

@@ -6,6 +6,7 @@ import { AuthProvider, PageTitleProvider } from "@/hooks";
 import { AppRoutes } from "@/app/router/AppRoutes";
 import { ToastProvider } from "@/components/ui/toast";
 import { PortalContainerProvider } from "@/components/ui/dialog";
+import { NavigationGuardProvider } from "@/hooks/useNavigationGuard";
 import { type FoxioConfig } from "@/app/config";
 
 interface FoxioAppProps {
@@ -23,15 +24,17 @@ export function FoxioApp({ config, targetElement }: FoxioAppProps) {
       <PortalContainerProvider container={targetElement || null}>
         <FoxioProvider config={config}>
           <ToastProvider>
-            <AuthProvider>
-              <PageContextProvider>
-                <PageTitleProvider>
-                  <MemoryRouter initialEntries={[config?.initialRoute ?? "/tutorial"]}>
-                    <AppRoutes />
-                  </MemoryRouter>
-                </PageTitleProvider>
-              </PageContextProvider>
-            </AuthProvider>
+            <NavigationGuardProvider>
+              <AuthProvider>
+                <PageContextProvider>
+                  <PageTitleProvider>
+                    <MemoryRouter initialEntries={[config?.initialRoute ?? "/tutorial"]}>
+                      <AppRoutes />
+                    </MemoryRouter>
+                  </PageTitleProvider>
+                </PageContextProvider>
+              </AuthProvider>
+            </NavigationGuardProvider>
           </ToastProvider>
         </FoxioProvider>
       </PortalContainerProvider>

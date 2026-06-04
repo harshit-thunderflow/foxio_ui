@@ -4,6 +4,7 @@ import { Pencil, Loader2 } from "lucide-react";
 import { useUpload } from "@/hooks/useUpload";
 import { useToast } from "@/hooks/useToast";
 import { updateProfileApi } from "@/services/profile";
+import { DiscardModal } from "@/components/common/DiscardModal";
 import { SourceDialog, CameraDialog, CropDialog } from "./dialogs";
 
 interface ProfileAvatarEditorProps {
@@ -16,6 +17,7 @@ export function ProfileAvatarEditor({ currentImage, initials, onUpdated }: Profi
   const [sourceOpen, setSourceOpen] = useState(false);
   const [cameraOpen, setCameraOpen] = useState(false);
   const [cropOpen, setCropOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -48,8 +50,13 @@ export function ProfileAvatarEditor({ currentImage, initials, onUpdated }: Profi
     setCropOpen(true);
   };
 
-  const handleDelete = async () => {
+  const handleDeleteRequest = () => {
     setSourceOpen(false);
+    setDeleteConfirm(true);
+  };
+
+  const handleDelete = async () => {
+    setDeleteConfirm(false);
     setUploading(true);
     try {
       await updateProfileApi({ profile_image: "" });
@@ -107,13 +114,14 @@ export function ProfileAvatarEditor({ currentImage, initials, onUpdated }: Profi
         hasImage={!!currentImage}
         onCamera={handleCamera}
         onSelect={handleSelectFile}
-        onDelete={handleDelete}
+        onDelete={handleDeleteRequest}
       />
 
       <CameraDialog
         open={cameraOpen}
         onOpenChange={setCameraOpen}
         onCapture={handleCapture}
+        onError={(msg) => toast(msg, "warning")}
       />
 
       <CropDialog
@@ -122,6 +130,16 @@ export function ProfileAvatarEditor({ currentImage, initials, onUpdated }: Profi
         imageSrc={imageSrc}
         uploading={uploading}
         onUpload={handleUpload}
+      />
+
+      <DiscardModal
+        open={deleteConfirm}
+        title="Remove profile picture?"
+        description="This will permanently remove your profile picture."
+        confirmText="Remove"
+        cancelText="Keep"
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteConfirm(false)}
       />
 
       <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />

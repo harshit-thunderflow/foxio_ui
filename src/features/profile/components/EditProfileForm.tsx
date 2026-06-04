@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/common/Loader";
 import { DiscardModal } from "@/components/common/DiscardModal";
 import { updateProfileApi, type UpdateProfileRequest } from "@/services/profile";
 import { useToast } from "@/hooks/useToast";
+import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 import type { UserProfile } from "@/services/profile";
 
 interface EditProfileFormProps {
@@ -25,20 +27,23 @@ export function EditProfileForm({ profile, onCancel, onSuccess }: EditProfileFor
   const [loading, setLoading] = useState(false);
   const [showDiscard, setShowDiscard] = useState(false);
   const { toast } = useToast();
+  const { registerBlocker, unregisterBlocker } = useNavigationGuard();
 
-  const isDirty = () => {
-    return (
-      form.first_name !== (profile.first_name || "") ||
-      form.last_name !== (profile.last_name || "") ||
-      form.phone_number !== (profile.phone_number || "") ||
-      form.date_of_birth !== (profile.date_of_birth || "") ||
-      form.gender !== (profile.gender || "") ||
-      form.country !== (profile.country || "")
-    );
-  };
+  const dirty =
+    form.first_name !== (profile.first_name || "") ||
+    form.last_name !== (profile.last_name || "") ||
+    form.phone_number !== (profile.phone_number || "") ||
+    form.date_of_birth !== (profile.date_of_birth || "") ||
+    form.gender !== (profile.gender || "") ||
+    form.country !== (profile.country || "");
+
+  useEffect(() => {
+    registerBlocker(() => dirty);
+    return () => unregisterBlocker();
+  }, [dirty, registerBlocker, unregisterBlocker]);
 
   const handleCancel = () => {
-    if (isDirty()) setShowDiscard(true);
+    if (dirty) setShowDiscard(true);
     else onCancel();
   };
 
@@ -78,8 +83,9 @@ export function EditProfileForm({ profile, onCancel, onSuccess }: EditProfileFor
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {fields.map(({ key, label, placeholder, type }) => (
             <div key={key} className="space-y-2">
-              <label className="text-sm font-medium text-foreground">{label}</label>
+              <Label htmlFor={key}>{label}</Label>
               <Input
+                id={key}
                 type={type || "text"}
                 placeholder={placeholder}
                 value={form[key] || ""}
@@ -94,7 +100,7 @@ export function EditProfileForm({ profile, onCancel, onSuccess }: EditProfileFor
         <div className="flex gap-3 pt-2">
           <Button
             type="submit"
-            disabled={loading || !isDirty()}
+            disabled={loading || !dirty}
             className="transition-all duration-200 hover:opacity-90 hover:shadow-md active:scale-[0.98]"
           >
             {loading ? <><Spinner size="sm" /> Updating...</> : "Update Profile"}
@@ -108,7 +114,8 @@ export function EditProfileForm({ profile, onCancel, onSuccess }: EditProfileFor
       <DiscardModal
         open={showDiscard}
         onCancel={() => setShowDiscard(false)}
-        onDiscard={onCancel}
+        onConfirm={onCancel}
+        cancelText="Keep editing"
       />
     </>
   );

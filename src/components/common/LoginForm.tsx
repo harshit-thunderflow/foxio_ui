@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardAction, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks";
 import { Spinner } from "@/components/common/Loader";
@@ -36,9 +37,14 @@ export function LoginForm() {
 
   return (
     <Card className="w-full max-w-sm shadow-lg border border-border">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-semibold">Welcome Back</CardTitle>
-        <CardDescription>Sign in to access your Foxio.</CardDescription>
+      <CardHeader>
+        <CardTitle>Login to your account</CardTitle>
+        <CardDescription>
+          Enter your email below to login to your account
+        </CardDescription>
+        <CardAction>
+          <Button variant="link">Sign Up</Button>
+        </CardAction>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -46,9 +52,9 @@ export function LoginForm() {
             <p className="text-xs text-destructive text-center">{apiError}</p>
           )}
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium text-foreground">
+            <Label htmlFor="email">
               Email
-            </label>
+            </Label>
             <Input
               id="email"
               type="email"
@@ -72,10 +78,16 @@ export function LoginForm() {
               <p className="text-xs text-destructive">{errors.email}</p>
             )}
           </div>
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-foreground">
-              Password
-            </label>
+          <div className="grid gap-2">
+            <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                <a
+                  href="#"
+                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                >
+                  Forgot your password?
+                </a>
+              </div>
             <Input
               id="password"
               type="password"
