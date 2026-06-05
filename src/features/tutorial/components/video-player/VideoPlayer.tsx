@@ -45,19 +45,19 @@ export function VideoPlayer({
   }, [state.isPlaying]);
 
   // When sources change, load new source without remounting (preserves fullscreen)
+  const currentSrc = sources[0]?.src;
   useEffect(() => {
-    const newSrc = sources[0]?.src;
-    if (newSrc && newSrc !== prevSrcRef.current) {
-      prevSrcRef.current = newSrc;
+    if (currentSrc && currentSrc !== prevSrcRef.current) {
+      prevSrcRef.current = currentSrc;
       const video = videoRef.current;
       if (video) {
-        video.src = newSrc;
+        video.src = currentSrc;
         video.poster = poster ?? "";
         video.load();
         if (autoPlay && hasPlayedRef.current) video.play().catch(() => {});
       }
     }
-  }, [sources, poster, autoPlay, videoRef]);
+  }, [currentSrc, poster, autoPlay, videoRef]);
 
   if (!sources || sources.length === 0) {
     return (
@@ -77,17 +77,13 @@ export function VideoPlayer({
     >
       <video
         ref={videoRef}
+        src={sources[0]?.src}
         poster={poster}
         playsInline
         preload="metadata"
         className="w-full h-full object-contain"
         onClick={actions.togglePlay}
-      >
-        {sources.map((source) => (
-          <source key={source.src} src={source.src} type={source.type} />
-        ))}
-        Your browser does not support the video tag.
-      </video>
+      />
 
       {/* Preload next video */}
       {preloadSrc && (

@@ -27,7 +27,7 @@ export function OverviewPage() {
   usePageTitle("Overview");
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 space-y-4">
         <HeroSection
           title="Interactive Walkthrough"
           description="We'll highlight the elements on your page to show you exactly where to go."

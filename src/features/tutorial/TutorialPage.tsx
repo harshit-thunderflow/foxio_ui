@@ -93,7 +93,7 @@ export function TutorialPage() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 space-y-4">
         <ContextLabel />
 
         <SectionHeading

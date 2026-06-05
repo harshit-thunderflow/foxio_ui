@@ -193,7 +193,7 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 sm:space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 sm:space-y-4">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}

@@ -50,7 +50,7 @@ export function LibraryPage() {
       </div>
 
       {/* Scrollable Video List */}
-      <div className="flex-1 overflow-y-auto pt-4">
+      <div className="flex-1 overflow-y-auto px-4 pt-4">
         <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
           {videos.map((video) => (
             <VideoCard key={video.id} video={video} />
