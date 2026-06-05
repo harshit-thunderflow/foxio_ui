@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ChevronDown, ChevronRight, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,12 +9,16 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
+const languages = ["English (US)", "Spanish", "French"];
+
 interface VideoFooterProps {
   tipTitle?: string;
   tipDescription?: string;
 }
 
 export function VideoFooter({ tipTitle = "Pro Tip", tipDescription = "Use keyboard shortcuts for faster navigation." }: VideoFooterProps) {
+  const [language, setLanguage] = useState("English (US)");
+
   return (
     <div className="border-t border-border/50 p-3 sm:p-4 space-y-2">
       {/* Language Selector */}
@@ -22,14 +27,16 @@ export function VideoFooter({ tipTitle = "Pro Tip", tipDescription = "Use keyboa
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1 text-[11px] sm:text-xs h-7 sm:h-8">
-              English (US)
+              {language}
               <ChevronDown className="w-3 h-3 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>English (US)</DropdownMenuItem>
-            <DropdownMenuItem>Spanish</DropdownMenuItem>
-            <DropdownMenuItem>French</DropdownMenuItem>
+            {languages.map((lang) => (
+              <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className="cursor-pointer hover:bg-accent">
+                {lang}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

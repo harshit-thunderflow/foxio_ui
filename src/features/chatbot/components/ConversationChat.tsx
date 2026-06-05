@@ -41,6 +41,7 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
     conversation?.conversation_id || null
   );
   const [contextId, setContextId] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>(conversation?.title || "New Chat");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const initRef = useRef(false);
   const creatingRef = useRef(false);
@@ -98,6 +99,7 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
         page_title: publicContext.title,
       });
       setActiveConversationId(conv.conversation_id);
+      setTitle(conv.title || publicContext.title || "New Chat");
 
       const snapshot = await storeContext({
         conversation_id: conv.conversation_id,
@@ -180,13 +182,13 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="w-full max-w-3xl mx-auto flex flex-col h-full overflow-hidden">
-      {/* Header: back button on top, title below */}
-      <div className="shrink-0 px-3 pt-2 pb-2 border-b border-border/50 space-y-1">
-        <Button variant="ghost" size="sm" onClick={onBack} className="gap-1 cursor-pointer">
-          <ArrowLeft className="w-4 h-4" /> Back
+      {/* Header */}
+      <div className="shrink-0 px-3 pt-2 pb-2 border-b border-border/50 flex items-center gap-2">
+        <Button variant="ghost" size="icon" onClick={onBack} className="h-8 w-8 rounded-full cursor-pointer">
+          <ArrowLeft className="w-4 h-4" />
         </Button>
-        <p className="text-base font-bold text-foreground truncate px-1">
-          {conversation?.title || "New Chat"}
+        <p className="text-base font-bold text-foreground truncate">
+          {title}
         </p>
       </div>
 
