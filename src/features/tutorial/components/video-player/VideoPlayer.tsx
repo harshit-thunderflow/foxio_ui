@@ -80,7 +80,8 @@ export function VideoPlayer({
         src={sources[0]?.src}
         poster={poster}
         playsInline
-        preload="metadata"
+        preload="auto"
+        crossOrigin="anonymous"
         className="w-full h-full object-contain"
         onClick={actions.togglePlay}
       />

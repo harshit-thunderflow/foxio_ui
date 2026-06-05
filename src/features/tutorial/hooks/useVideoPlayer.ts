@@ -150,36 +150,7 @@ export function useVideoPlayer(options: UseVideoPlayerOptions = {}) {
   const seek = useCallback((time: number) => {
     if (!videoRef.current) return;
     const video = videoRef.current;
-    const clampedTime = Math.max(0, Math.min(time, video.duration || 0));
-
-    // Check if target time is within buffered range
-    let seekable = false;
-    for (let i = 0; i < video.buffered.length; i++) {
-      if (clampedTime >= video.buffered.start(i) && clampedTime <= video.buffered.end(i)) {
-        seekable = true;
-        break;
-      }
-    }
-
-    if (!seekable && video.seekable.length > 0) {
-      // Check against seekable ranges reported by browser
-      for (let i = 0; i < video.seekable.length; i++) {
-        if (clampedTime >= video.seekable.start(i) && clampedTime <= video.seekable.end(i)) {
-          seekable = true;
-          break;
-        }
-      }
-    }
-
-    if (!seekable) {
-      console.warn("[VideoPlayer] Seek target not in buffered/seekable range", {
-        target: clampedTime,
-        buffered: video.buffered.length > 0 ? `${video.buffered.start(0)}-${video.buffered.end(video.buffered.length - 1)}` : "none",
-        seekable: video.seekable.length > 0 ? `${video.seekable.start(0)}-${video.seekable.end(video.seekable.length - 1)}` : "none",
-      });
-    }
-
-    video.currentTime = clampedTime;
+    video.currentTime = Math.max(0, Math.min(time, video.duration || 0));
   }, []);
 
   const seekByPercent = useCallback((percent: number) => {
