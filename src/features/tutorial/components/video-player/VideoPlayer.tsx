@@ -81,7 +81,6 @@ export function VideoPlayer({
         poster={poster}
         playsInline
         preload="auto"
-        crossOrigin="anonymous"
         className="w-full h-full object-contain"
         onClick={actions.togglePlay}
       />
