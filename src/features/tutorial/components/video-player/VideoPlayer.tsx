@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { useVideoPlayer } from "../../hooks";
 import { VideoOverlay } from "./VideoOverlay";
@@ -36,6 +36,17 @@ export function VideoPlayer({
   const { videoRef, containerRef, state, actions } = useVideoPlayer({ onEnded: autoPlay && hasNext ? onNext : undefined });
   const prevSrcRef = useRef(sources[0]?.src);
   const hasPlayedRef = useRef(false);
+  const [useCors, setUseCors] = useState(true);
+
+  const currentSrc = sources[0]?.src;
+
+  // Probe CORS support — if HEAD request with CORS fails, disable crossOrigin
+  useEffect(() => {
+    if (!currentSrc) return;
+    fetch(currentSrc, { method: "HEAD", mode: "cors" })
+      .then(() => setUseCors(true))
+      .catch(() => setUseCors(false));
+  }, [currentSrc]);
 
   // Track first user-initiated play
   useEffect(() => {
@@ -45,7 +56,6 @@ export function VideoPlayer({
   }, [state.isPlaying]);
 
   // When sources change, load new source without remounting (preserves fullscreen)
-  const currentSrc = sources[0]?.src;
   useEffect(() => {
     if (currentSrc && currentSrc !== prevSrcRef.current) {
       prevSrcRef.current = currentSrc;
@@ -77,10 +87,11 @@ export function VideoPlayer({
     >
       <video
         ref={videoRef}
-        src={sources[0]?.src}
+        src={currentSrc}
         poster={poster}
         playsInline
         preload="auto"
+        crossOrigin={useCors ? "anonymous" : undefined}
         className="w-full h-full object-contain"
         onClick={actions.togglePlay}
       />
