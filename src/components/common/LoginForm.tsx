@@ -5,10 +5,12 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks";
 import { Spinner } from "@/components/common/Loader";
+import { Eye, EyeOff } from "lucide-react";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [touched, setTouched] = useState<{ email?: boolean; password?: boolean }>({});
   const { login, loading, error: apiError } = useAuth();
@@ -88,25 +90,35 @@ export function LoginForm() {
                   Forgot your password?
                 </a>
               </div>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              maxLength={32}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onBlur={() => handleBlur("password")}
-              style={{
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderColor: touched.password && errors.password ? "var(--destructive)" : "var(--border)",
-              }}
-              className={`transition-all focus-visible:ring-2 ${
-                touched.password && errors.password
-                  ? "focus-visible:!ring-destructive/40"
-                  : "focus-visible:ring-ring"
-              }`}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                maxLength={32}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => handleBlur("password")}
+                style={{
+                  borderWidth: "1px",
+                  borderStyle: "solid",
+                  borderColor: touched.password && errors.password ? "var(--destructive)" : "var(--border)",
+                }}
+                className={`pr-9 transition-all focus-visible:ring-2 ${
+                  touched.password && errors.password
+                    ? "focus-visible:!ring-destructive/40"
+                    : "focus-visible:ring-ring"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute inset-y-0 right-0 flex items-center px-2.5 text-muted-foreground hover:text-foreground"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
             {touched.password && errors.password && (
               <p className="text-xs text-destructive">{errors.password}</p>
             )}

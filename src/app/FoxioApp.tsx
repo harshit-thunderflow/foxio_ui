@@ -5,7 +5,7 @@ import { PageContextProvider } from "@/app/providers/PageContextProvider";
 import { AuthProvider, PageTitleProvider } from "@/hooks";
 import { AppRoutes } from "@/app/router/AppRoutes";
 import { ToastProvider } from "@/components/ui/toast";
-import { PortalContainerProvider } from "@/components/ui/dialog";
+import { PortalContainerProvider } from "@/components/ui/portal-container";
 import { NavigationGuardProvider } from "@/hooks/useNavigationGuard";
 import { type FoxioConfig } from "@/app/config";
 

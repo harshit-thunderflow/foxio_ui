@@ -1,18 +1,12 @@
 import * as React from "react"
-import { createContext, useContext } from "react"
 import { Dialog as DialogPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
+import { usePortalContainer, PortalContainerProvider } from "@/components/ui/portal-container"
 
-const PortalContainerContext = createContext<HTMLElement | null>(null);
-
-export function PortalContainerProvider({ container, children }: { container: HTMLElement | null; children: React.ReactNode }) {
-  return <PortalContainerContext.Provider value={container}>{children}</PortalContainerContext.Provider>;
-}
-
-export const usePortalContainer = () => useContext(PortalContainerContext);
+export { PortalContainerProvider, usePortalContainer };
 
 function Dialog({
   ...props
