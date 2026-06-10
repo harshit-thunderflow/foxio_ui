@@ -83,7 +83,7 @@ export function VideoPlayer({
   return (
     <Card
       ref={containerRef}
-      className={`group/player relative w-full max-w-2xl aspect-video p-0 overflow-hidden bg-black border-border shadow-lg select-none ${className ?? ""}`}
+      className={`group/player relative w-full max-w-2xl aspect-video p-0 overflow-hidden border-border shadow-lg select-none ${className ?? ""}`}
     >
       <video
         ref={videoRef}

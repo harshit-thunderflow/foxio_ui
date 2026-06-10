@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { SquarePen, MessageCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/common/Loader";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ItemGroup } from "@/components/ui/item";
 import { ConversationCard } from "./ConversationCard";
 import type { Conversation } from "@/services/chat";
 
@@ -48,7 +50,7 @@ export function RecentChats({
           </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-2">
+        <ScrollArea className="flex-1 px-3 pb-3">
           {conversations.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center gap-2 text-muted-foreground">
               <MessageCircle className="w-8 h-8 opacity-50" />
@@ -63,31 +65,33 @@ export function RecentChats({
                 <div className="flex-1 h-px bg-border" />
               </div>
 
-              {visible.map((conv) => (
-                <ConversationCard
-                  key={conv.conversation_id}
-                  conversation={conv}
-                  onSelect={onSelect}
-                  onRename={onRename}
-                  onPin={onPin}
-                  onArchive={onArchive}
-                  onDelete={onDelete}
-                />
-              ))}
+              <ItemGroup>
+                {visible.map((conv) => (
+                  <ConversationCard
+                    key={conv.conversation_id}
+                    conversation={conv}
+                    onSelect={onSelect}
+                    onRename={onRename}
+                    onPin={onPin}
+                    onArchive={onArchive}
+                    onDelete={onDelete}
+                  />
+                ))}
+              </ItemGroup>
 
               {total > SHOW_COUNT && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={onSeeMore}
-                  className="w-full gap-1 text-xs text-muted-foreground cursor-pointer"
+                  className="w-full gap-1 text-xs text-muted-foreground cursor-pointer mt-2"
                 >
                   See More ({total - SHOW_COUNT}) <ChevronRight className="w-3 h-3" />
                 </Button>
               )}
             </>
           )}
-        </div>
+        </ScrollArea>
       </div>
     </div>
   );

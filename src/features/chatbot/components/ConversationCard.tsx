@@ -67,62 +67,68 @@ export function ConversationCard({
       onClick={() => {
         if (!renaming && !saving) onSelect(conversation);
       }}
-      className="group w-full text-left p-3 rounded-xl border border-border bg-card hover:bg-muted/60 transition-colors cursor-pointer"
+      style={{ border: "1px solid var(--border)" }}
+      className="group flex items-center gap-2.5 w-full rounded-lg px-3 py-2.5 text-sm cursor-pointer hover:bg-muted/60 transition-colors"
     >
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          {renaming ? (
-            <Input
-              ref={inputRef}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  submitRename();
-                }
-                if (e.key === "Escape") {
-                  setTitle(conversation.title);
-                  setRenaming(false);
-                }
-              }}
-              onClick={(e) => e.stopPropagation()}
-              className="h-7 text-sm font-medium px-2 py-0"
-            />
-          ) : saving ? (
-            <div className="flex items-center gap-2">
-              <Spinner size="sm" />
-              <span className="text-sm text-muted-foreground">Saving...</span>
-            </div>
-          ) : (
-            <>
+      {/* Left: title + platform */}
+      <div className="flex-1 min-w-0">
+        {renaming ? (
+          <Input
+            ref={inputRef}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                submitRename();
+              }
+              if (e.key === "Escape") {
+                setTitle(conversation.title);
+                setRenaming(false);
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="h-7 text-sm font-medium px-2 py-0"
+          />
+        ) : saving ? (
+          <div className="flex items-center gap-2">
+            <Spinner size="sm" />
+            <span className="text-sm text-muted-foreground">Saving...</span>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-1.5">
               <p className="text-sm font-medium text-foreground truncate">
                 {conversation.title || "Untitled"}
               </p>
               {conversation.is_pinned && (
                 <Pin className="w-3 h-3 text-destructive shrink-0" />
               )}
-            </>
-          )}
-        </div>
-        {!renaming && !saving && (
-          <ConversationActions
-            conversation={conversation}
-            onPin={onPin}
-            onArchive={onArchive}
-            onDelete={onDelete}
-            onStartRename={() => setRenaming(true)}
-          />
+            </div>
+            <p className="text-[11px] text-muted-foreground truncate mt-0.5">
+              {conversation.platform}
+            </p>
+          </>
         )}
       </div>
-      <div className="flex items-center justify-between mt-1">
-        <span className="text-[11px] text-muted-foreground truncate max-w-[60%]">
-          {conversation.platform}
-        </span>
-        <span className="text-[10px] text-muted-foreground">
-          {new Date(conversation.updated_at).toLocaleDateString()}
-        </span>
-      </div>
+
+      {/* Right: actions + date */}
+      {!renaming && !saving && (
+        <div className="shrink-0 flex flex-col items-end gap-1">
+          <div className="">
+            <ConversationActions
+              conversation={conversation}
+              onPin={onPin}
+              onArchive={onArchive}
+              onDelete={onDelete}
+              onStartRename={() => setRenaming(true)}
+            />
+          </div>
+          <span className="text-[10px] text-muted-foreground">
+            {new Date(conversation.updated_at).toLocaleDateString()}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

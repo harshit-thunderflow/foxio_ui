@@ -194,6 +194,12 @@
   animation: slide-down 0.25s ease-out;
 }
 
+/* Fix border visibility in Shadow DOM */
+[data-slot="input-group"],
+[data-slot="input"] {
+  border: 1px solid var(--input);
+}
+
 /* Custom scrollbar */
 .foxio-scrollbar {
   scrollbar-width: thin;

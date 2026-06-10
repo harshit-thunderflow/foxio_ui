@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/common/Loader";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ItemGroup } from "@/components/ui/item";
 import {
   Pagination,
   PaginationContent,
@@ -13,6 +14,11 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
 import { ConversationCard } from "./ConversationCard";
 import { useConversationHistory } from "@/hooks/useConversationHistory";
 import type { Conversation } from "@/services/chat";
@@ -108,20 +114,18 @@ export function ConversationHistoryFull({ onSelect, onBack, onRename, onPin, onA
 
         {/* Search */}
         <div className="shrink-0 px-3 pb-3">
-          <div className="relative flex items-center border border-border rounded-xl">
-            <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search conversations..."
-              defaultValue={query}
-              onChange={handleSearch}
-              className="pl-9 h-9 rounded-xl border-none shadow-none focus-visible:ring-0"
-            />
-          </div>
+        <InputGroup className="max-w-xs">
+          <InputGroupInput placeholder="Search conversations..."
+            defaultValue={query}
+            onChange={handleSearch} />
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+        </InputGroup>
         </div>
 
         {/* List */}
         <ScrollArea className="flex-1 px-3 pb-3 relative">
-          <div className="space-y-2">
           {loading && (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-[2px] rounded-xl">
               <Loader text="Loading..." />
@@ -138,18 +142,19 @@ export function ConversationHistoryFull({ onSelect, onBack, onRename, onPin, onA
             </p>
           )}
 
-          {items.map((conv) => (
-            <ConversationCard
-              key={conv.conversation_id}
-              conversation={conv}
-              onSelect={onSelect}
-              onRename={handleRename}
-              onPin={handlePin}
-              onArchive={handleArchive}
-              onDelete={handleDelete}
-            />
-          ))}
-          </div>
+          <ItemGroup>
+            {items.map((conv) => (
+              <ConversationCard
+                key={conv.conversation_id}
+                conversation={conv}
+                onSelect={onSelect}
+                onRename={handleRename}
+                onPin={handlePin}
+                onArchive={handleArchive}
+                onDelete={handleDelete}
+              />
+            ))}
+          </ItemGroup>
         </ScrollArea>
 
         {/* Pagination */}
