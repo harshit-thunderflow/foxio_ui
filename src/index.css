@@ -194,3 +194,31 @@
   animation: slide-down 0.25s ease-out;
 }
 
+/* Custom scrollbar */
+.foxio-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.4 0 0 / 0.3) transparent;
+}
+.foxio-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.foxio-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.foxio-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.4 0 0 / 0.3);
+  border-radius: 9999px;
+}
+.foxio-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.4 0 0 / 0.5);
+}
+.dark .foxio-scrollbar {
+  scrollbar-color: oklch(0.8 0 0 / 0.3) transparent;
+}
+.dark .foxio-scrollbar::-webkit-scrollbar-thumb {
+  background: oklch(0.8 0 0 / 0.3);
+}
+.dark .foxio-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.8 0 0 / 0.5);
+}
+

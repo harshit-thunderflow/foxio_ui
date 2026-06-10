@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SearchBar, CategoryPills, VideoCard, LibraryFooterNav } from "./components";
 import { usePageTitle } from "@/hooks";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { VideoCardData } from "./components/VideoCard";
 
 const categories = ["All", "Setup", "Automation", "Sync", "Advanced"];
@@ -50,13 +51,13 @@ export function LibraryPage() {
       </div>
 
       {/* Scrollable Video List */}
-      <div className="flex-1 overflow-y-auto px-4 pt-4">
+      <ScrollArea className="flex-1 px-4 pt-4">
         <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
           {videos.map((video) => (
             <VideoCard key={video.id} video={video} />
           ))}
         </div>
-      </div>
+      </ScrollArea>
 
       {/* Footer Nav */}
       <LibraryFooterNav />

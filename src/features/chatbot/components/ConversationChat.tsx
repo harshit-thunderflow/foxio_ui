@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ArrowLeft, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/common/Loader";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { SuggestionChips } from "./SuggestionChips";
@@ -27,6 +28,7 @@ function mapApiMessages(messages: Message[]): ChatMessageData[] {
     role: msg.role === "assistant" ? "ai" : "user",
     content: msg.content,
     timestamp: msg.created_at,
+    feedback: msg.feedback?.rating ?? null,
   }));
 }
 
@@ -193,7 +195,8 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 sm:space-y-4">
+      <ScrollArea className="flex-1 px-4 py-3">
+        <div className="space-y-3 sm:space-y-4">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
@@ -203,7 +206,8 @@ export function ConversationChat({ conversation, isNewChat, onBack }: Conversati
           </div>
         )}
         <div ref={messagesEndRef} />
-      </div>
+        </div>
+      </ScrollArea>
 
       {/* Footer: Suggestions + Input */}
       <div className="shrink-0 border-t border-border/50 p-3 space-y-2">

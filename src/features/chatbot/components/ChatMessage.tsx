@@ -14,6 +14,7 @@ export interface ChatMessageData {
   role: "ai" | "user";
   content: string;
   timestamp?: string;
+  feedback?: "thumbs_up" | "thumbs_down" | null;
   steps?: ChatStep[];
   action?: { label: string; icon?: React.ReactNode };
 }
@@ -26,9 +27,9 @@ interface ChatMessageProps {
 const FEEDBACK_DEBOUNCE = 800;
 
 export function ChatMessage({ message, onAction }: ChatMessageProps) {
-  const [feedback, setFeedback] = useState<"thumbs_up" | "thumbs_down" | null>(null);
+  const [feedback, setFeedback] = useState<"thumbs_up" | "thumbs_down" | null>(message.feedback ?? null);
   const [copied, setCopied] = useState(false);
-  const lastSentRef = useRef<"thumbs_up" | "thumbs_down" | null>(null);
+  const lastSentRef = useRef<"thumbs_up" | "thumbs_down" | null>(message.feedback ?? null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleFeedback = useCallback(
@@ -146,7 +147,7 @@ export function ChatMessage({ message, onAction }: ChatMessageProps) {
           >
             <ThumbsUp
               className={`w-3.5 h-3.5 ${
-                feedback === "thumbs_up" ? "text-chart-1" : "text-muted-foreground"
+                feedback === "thumbs_up" ? "text-foreground" : "text-muted-foreground"
               }`}
             />
           </button>
@@ -157,7 +158,7 @@ export function ChatMessage({ message, onAction }: ChatMessageProps) {
           >
             <ThumbsDown
               className={`w-3.5 h-3.5 ${
-                feedback === "thumbs_down" ? "text-chart-1" : "text-muted-foreground"
+                feedback === "thumbs_down" ? "text-foreground" : "text-muted-foreground"
               }`}
             />
           </button>

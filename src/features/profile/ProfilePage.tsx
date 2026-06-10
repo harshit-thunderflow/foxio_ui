@@ -3,6 +3,7 @@ import { LoginForm } from "@/components/common/LoginForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { LogOut, Phone, Calendar, MapPin, User, Loader2, Pencil } from "lucide-react";
 import { useState, useCallback } from "react";
 import { EditProfileForm } from "./components/EditProfileForm";
@@ -68,7 +69,8 @@ export function ProfilePage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-0 w-full">
+    <ScrollArea className="flex-1 w-full">
+      <div className="flex flex-col w-full">
 
       <Card className="mt-4 rounded-none! shadow-md! w-full">
         <CardContent className="flex! flex-col! md:flex-row! md:items-center! gap-6! md:gap-8! px-6!">
@@ -139,6 +141,7 @@ export function ProfilePage() {
           </CardContent>
         </Card>
       )}
-    </div>
+      </div>
+    </ScrollArea>
   );
 }

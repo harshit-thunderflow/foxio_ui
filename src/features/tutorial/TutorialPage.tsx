@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { ContextLabel } from "@/components/common/ContextLabel";
 import { usePageTitle, useVideos } from "@/hooks";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   SectionHeading,
   ProgressRail,
@@ -93,7 +94,8 @@ export function TutorialPage() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-4 space-y-4">
+      <ScrollArea className="flex-1 px-4">
+        <div className="space-y-4">
         <ContextLabel />
 
         <SectionHeading
@@ -126,7 +128,8 @@ export function TutorialPage() {
         />
 
         <Checklist title="Tutorial Checklist" items={checklistItems} />
-      </div>
+        </div>
+      </ScrollArea>
 
       {/* Footer */}
       <VideoFooter />

@@ -43,10 +43,17 @@ export interface PaginatedConversationsResponse {
 }
 
 // --- Messages ---
+export interface MessageFeedback {
+  rating: "thumbs_up" | "thumbs_down";
+  comment: string;
+  created_at: string;
+}
+
 export interface Message {
   message_id: string;
   role: string;
   content: string;
+  feedback: MessageFeedback | null;
   created_at: string;
 }
 

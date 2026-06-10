@@ -1,5 +1,6 @@
 import { HeroSection, ActiveStepCard, UpcomingSteps, HelpIllustration, OverviewFooter } from "./components";
 import { usePageTitle } from "@/hooks";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { StepItem } from "./components/UpcomingSteps";
 
 const upcomingSteps: StepItem[] = [
@@ -27,7 +28,8 @@ export function OverviewPage() {
   usePageTitle("Overview");
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto px-4 space-y-4">
+      <ScrollArea className="flex-1 px-4">
+        <div className="space-y-4">
         <HeroSection
           title="Interactive Walkthrough"
           description="We'll highlight the elements on your page to show you exactly where to go."
@@ -43,7 +45,8 @@ export function OverviewPage() {
         <UpcomingSteps steps={upcomingSteps} />
 
         <HelpIllustration imageUrl="https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80" />
-      </div>
+        </div>
+      </ScrollArea>
 
       <OverviewFooter />
     </div>

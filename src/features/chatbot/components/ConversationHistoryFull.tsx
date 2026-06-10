@@ -3,6 +3,7 @@ import { ArrowLeft, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/common/Loader";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Pagination,
   PaginationContent,
@@ -119,7 +120,8 @@ export function ConversationHistoryFull({ onSelect, onBack, onRename, onPin, onA
         </div>
 
         {/* List */}
-        <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-2 relative">
+        <ScrollArea className="flex-1 px-3 pb-3 relative">
+          <div className="space-y-2">
           {loading && (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-[2px] rounded-xl">
               <Loader text="Loading..." />
@@ -147,7 +149,8 @@ export function ConversationHistoryFull({ onSelect, onBack, onRename, onPin, onA
               onDelete={handleDelete}
             />
           ))}
-        </div>
+          </div>
+        </ScrollArea>
 
         {/* Pagination */}
         {totalPages > 1 && (
