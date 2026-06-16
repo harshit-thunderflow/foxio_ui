@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { ArrowLeft, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/common/Loader";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ItemGroup } from "@/components/ui/item";

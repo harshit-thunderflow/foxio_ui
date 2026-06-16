@@ -17,7 +17,7 @@ export function Checklist({ title, items }: ChecklistProps) {
   const doneCount = items.filter((i) => i.status === "done").length;
 
   return (
-    <div className="space-y-3 sm:space-y-4 max-w-2xl w-full">
+    <div className="space-y-3 sm:space-y-4 w-full">
       <div className="flex items-center justify-between">
         <h2 className="text-sm sm:text-base font-semibold text-foreground tracking-tight">
           {title}
@@ -32,7 +32,7 @@ export function Checklist({ title, items }: ChecklistProps) {
           <Card
             key={item.id}
             size="sm"
-            className={`flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl ${
+            className={`flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl transition-all ${
               item.status === "active"
                 ? "bg-card/60 ring-primary/20 shadow-sm"
                 : item.status === "done"
@@ -40,17 +40,17 @@ export function Checklist({ title, items }: ChecklistProps) {
                 : "bg-card/30 ring-border/10"
             }`}
           >
-            {/* Checkbox */}
+            {/* Checkbox icon */}
             {item.status === "done" ? (
-              <div className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-md bg-primary border-2 border-primary flex items-center justify-center shrink-0">
-                <Check className="w-2.5 h-2 sm:w-3 sm:h-2.5 text-primary-foreground" />
+              <div className="w-5 h-5 rounded-md bg-primary border-2 border-primary flex items-center justify-center shrink-0">
+                <Check className="w-3 h-2.5 text-primary-foreground" />
               </div>
             ) : item.status === "active" ? (
-              <div className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-md bg-background border-2 border-primary flex items-center justify-center shrink-0">
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-sm bg-primary" />
+              <div className="w-5 h-5 rounded-md bg-background border-2 border-primary flex items-center justify-center shrink-0">
+                <div className="w-2 h-2 rounded-sm bg-primary" />
               </div>
             ) : (
-              <div className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-md bg-background border-2 border-muted-foreground/40 shrink-0" />
+              <div className="w-5 h-5 rounded-md bg-background border-2 border-muted-foreground/40 shrink-0" />
             )}
 
             {/* Text */}
@@ -67,7 +67,7 @@ export function Checklist({ title, items }: ChecklistProps) {
             </span>
 
             {item.status === "active" && (
-              <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
+              <ChevronRight className="w-4 h-4 text-primary shrink-0" />
             )}
           </Card>
         ))}

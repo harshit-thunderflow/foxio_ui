@@ -69,7 +69,7 @@ export function VideoControlsBar({ state, actions, onNext, onPrevious, hasNext, 
       tabIndex={0}
       role="toolbar"
       aria-label="Video controls"
-      className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-3 pb-2.5 pt-8 transition-opacity duration-300 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"} group-hover/player:opacity-100 group-hover/player:pointer-events-auto`}
+      className={`absolute bottom-0 left-0 right-0 bg-black/70 backdrop-blur-sm px-3 pb-2.5 pt-3 transition-opacity duration-300 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"} group-hover/player:opacity-100 group-hover/player:pointer-events-auto`}
     >
       <VideoSeekBar
         progress={state.progress}

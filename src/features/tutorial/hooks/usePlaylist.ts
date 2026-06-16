@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 
 export interface PlaylistItem {
   id: string;
@@ -21,22 +21,35 @@ export interface PlaylistActions {
   goTo: (index: number) => void;
 }
 
-export function usePlaylist(items: PlaylistItem[]) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export function usePlaylist(items: PlaylistItem[], initialIndex = 0) {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const hasUserNavigated = useRef(false);
+
+  // Sync with initialIndex when progress data loads (but not after user manually navigates)
+  useEffect(() => {
+    if (!hasUserNavigated.current) {
+      setCurrentIndex(initialIndex);
+    }
+  }, [initialIndex]);
 
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < items.length - 1;
 
   const next = useCallback(() => {
+    hasUserNavigated.current = true;
     setCurrentIndex((i) => (i < items.length - 1 ? i + 1 : i));
   }, [items.length]);
 
   const previous = useCallback(() => {
+    hasUserNavigated.current = true;
     setCurrentIndex((i) => (i > 0 ? i - 1 : i));
   }, []);
 
   const goTo = useCallback((index: number) => {
-    if (index >= 0 && index < items.length) setCurrentIndex(index);
+    if (index >= 0 && index < items.length) {
+      hasUserNavigated.current = true;
+      setCurrentIndex(index);
+    }
   }, [items.length]);
 
   const state: PlaylistState = useMemo(() => ({
@@ -49,7 +62,6 @@ export function usePlaylist(items: PlaylistItem[]) {
 
   const actions: PlaylistActions = useMemo(() => ({ next, previous, goTo }), [next, previous, goTo]);
 
-  // Next item for optional preloading
   const nextItem = hasNext ? items[currentIndex + 1] : null;
 
   return { state, actions, nextItem };

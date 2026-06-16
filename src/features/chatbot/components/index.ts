@@ -6,3 +6,4 @@ export { ConversationHistoryFull } from "./ConversationHistoryFull";
 export { ConversationActions } from "./ConversationActions";
 export { ConversationCard } from "./ConversationCard";
 export { ConversationChat } from "./ConversationChat";
+export { ChatbotSkeleton } from "./ChatbotSkeleton";

@@ -1,50 +1,82 @@
-import { useState } from "react";
-import { SearchBar, CategoryPills, VideoCard, LibraryFooterNav } from "./components";
-import { usePageTitle } from "@/hooks";
+import { useState, useMemo, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { SearchBar, CategoryPills, VideoCard, LibraryFooterNav, LibrarySkeleton } from "./components";
+import { usePageTitle, useVideos, useVideoCategories } from "@/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { VideoCardData } from "./components/VideoCard";
-
-const categories = ["All", "Setup", "Automation", "Sync", "Advanced"];
-
-const videos: VideoCardData[] = [
-  {
-    id: "1",
-    title: "Configuring Your Core Automation",
-    description: "Learn how to map your first trigger-action workflow...",
-    thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80",
-    duration: "4:32",
-    transcript: {
-      label: "Transcript highlight",
-      quote: "...drag the trigger node into the automation canvas to start...",
-    },
-  },
-  {
-    id: "2",
-    title: "Data Sync Essentials",
-    description: "Mastering real-time synchronization between modules...",
-    thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",
-    duration: "6:15",
-  },
-  {
-    id: "3",
-    title: "Introduction to Foxio AI",
-    description: "A complete overview of the assistant's capabilities...",
-    thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80",
-    duration: "3:48",
-  },
-];
 
 export function LibraryPage() {
   usePageTitle("Library");
+  const navigate = useNavigate();
+
+  const { videos, loading: videosLoading, error } = useVideos();
+  const { categories, loading: categoriesLoading } = useVideoCategories();
+
   const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const isInitialLoad = videos.length === 0 && (videosLoading || categoriesLoading);
+
+  const allCategories = useMemo(() => ["All", ...categories], [categories]);
+
+  const handleSearch = useCallback((value: string) => {
+    setSearchQuery(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => setDebouncedSearch(value), 400);
+  }, []);
+
+  // Client-side filtering
+  const filteredVideos = useMemo(() => {
+    let result = videos;
+    if (activeCategory !== "All") {
+      result = result.filter((v) => v.category === activeCategory);
+    }
+    if (debouncedSearch) {
+      const q = debouncedSearch.toLowerCase();
+      result = result.filter(
+        (v) =>
+          v.title.toLowerCase().includes(q) ||
+          v.description.toLowerCase().includes(q) ||
+          v.tags?.some((t) => t.toLowerCase().includes(q))
+      );
+    }
+    return result;
+  }, [videos, activeCategory, debouncedSearch]);
+
+  const handleVideoClick = useCallback((videoId: string) => {
+    navigate("/tutorial", { state: { videoId } });
+  }, [navigate]);
+
+  const formatDuration = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  // Show skeleton until data is ready
+  if (isInitialLoad) {
+    return (
+      <div className="flex flex-col h-full overflow-hidden">
+        <ScrollArea className="flex-1 px-4 pt-2">
+          <LibrarySkeleton />
+        </ScrollArea>
+        <LibraryFooterNav />
+      </div>
+    );
+  }
+
+  if (error && videos.length === 0) {
+    return <div className="flex items-center justify-center h-full text-red-500">{error}</div>;
+  }
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Search + Filters */}
-      <div className="shrink-0 space-y-3">
-        <SearchBar />
+      <div className="shrink-0 space-y-3 px-4 pt-2">
+        <SearchBar value={searchQuery} onChange={handleSearch} />
         <CategoryPills
-          categories={categories}
+          categories={allCategories}
           active={activeCategory}
           onSelect={setActiveCategory}
         />
@@ -52,11 +84,29 @@ export function LibraryPage() {
 
       {/* Scrollable Video List */}
       <ScrollArea className="flex-1 px-4 pt-4">
-        <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-          {videos.map((video) => (
-            <VideoCard key={video.id} video={video} />
-          ))}
-        </div>
+        {filteredVideos.length === 0 ? (
+          <div className="flex items-center justify-center py-12 text-muted-foreground text-sm">
+            No videos found.
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+            {filteredVideos.map((video) => (
+              <VideoCard
+                key={video.id}
+                video={{
+                  id: video.id,
+                  title: video.title,
+                  description: video.description,
+                  thumbnail: video.thumbnail_url,
+                  duration: formatDuration(video.duration || 0),
+                  category: video.category,
+                  tags: video.tags,
+                }}
+                onClick={() => handleVideoClick(video.id)}
+              />
+            ))}
+          </div>
+        )}
       </ScrollArea>
 
       {/* Footer Nav */}

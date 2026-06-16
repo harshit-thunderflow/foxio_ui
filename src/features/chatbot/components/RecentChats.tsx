@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { SquarePen, MessageCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Loader } from "@/components/common/Loader";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ItemGroup } from "@/components/ui/item";
 import { ConversationCard } from "./ConversationCard";
+import { ChatbotSkeleton } from "./ChatbotSkeleton";
 import type { Conversation } from "@/services/chat";
 
 interface RecentChatsProps {
@@ -37,7 +37,7 @@ export function RecentChats({
   const visible = useMemo(() => conversations.slice(0, SHOW_COUNT), [conversations]);
 
   if (loading) {
-    return <Loader fullScreen text="Loading conversations..." />;
+    return <ChatbotSkeleton />;
   }
 
   return (

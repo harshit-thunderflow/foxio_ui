@@ -20,6 +20,8 @@ interface VideoPlayerProps {
   hasNext?: boolean;
   hasPrevious?: boolean;
   preloadSrc?: string;
+  onTimeUpdate?: (currentTime: number, duration: number, isPlaying: boolean) => void;
+  onEnded?: () => void;
 }
 
 export function VideoPlayer({
@@ -32,8 +34,10 @@ export function VideoPlayer({
   hasNext = false,
   hasPrevious = false,
   preloadSrc,
+  onTimeUpdate,
+  onEnded,
 }: VideoPlayerProps) {
-  const { videoRef, containerRef, state, actions } = useVideoPlayer({ onEnded: autoPlay && hasNext ? onNext : undefined });
+  const { videoRef, containerRef, state, actions } = useVideoPlayer({ onEnded });
   const prevSrcRef = useRef(sources[0]?.src);
   const hasPlayedRef = useRef(false);
   const [useCors, setUseCors] = useState(true);
@@ -71,7 +75,7 @@ export function VideoPlayer({
 
   if (!sources || sources.length === 0) {
     return (
-      <Card className={`relative w-full max-w-2xl aspect-video p-0 overflow-hidden bg-black border-border shadow-lg flex items-center justify-center ${className ?? ""}`}>
+      <Card className={`relative w-full aspect-video p-0 overflow-hidden bg-black border-border shadow-lg flex items-center justify-center ${className ?? ""}`}>
         <div className="flex flex-col items-center gap-2 text-white">
           <AlertCircle className="w-8 h-8 text-destructive" />
           <p className="text-xs sm:text-sm text-center px-4">No video source provided.</p>
@@ -83,7 +87,7 @@ export function VideoPlayer({
   return (
     <Card
       ref={containerRef}
-      className={`group/player relative w-full max-w-2xl aspect-video p-0 overflow-hidden border-border shadow-lg select-none ${className ?? ""}`}
+      className={`group/player relative w-full aspect-video p-0 overflow-hidden border-border shadow-lg select-none ${className ?? ""}`}
     >
       <video
         ref={videoRef}
@@ -94,6 +98,7 @@ export function VideoPlayer({
         crossOrigin={useCors ? "anonymous" : undefined}
         className="w-full h-full object-contain"
         onClick={actions.togglePlay}
+        onTimeUpdate={() => onTimeUpdate?.(state.currentTime, state.duration, state.isPlaying)}
       />
 
       {/* Preload next video */}

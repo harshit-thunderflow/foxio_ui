@@ -4,10 +4,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { LogOut, Phone, Calendar, MapPin, User, Loader2, Pencil } from "lucide-react";
+import { LogOut, Phone, Calendar, MapPin, User, Pencil } from "lucide-react";
 import { useState, useCallback } from "react";
 import { EditProfileForm } from "./components/EditProfileForm";
 import { ProfileAvatarEditor } from "./components/ProfileAvatarEditor";
+import { ProfileSkeleton } from "./components/ProfileSkeleton";
 
 export function ProfilePage() {
   usePageTitle("Profile");
@@ -37,9 +38,9 @@ export function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
-      </div>
+      <ScrollArea className="flex-1 w-full">
+        <ProfileSkeleton />
+      </ScrollArea>
     );
   }
 

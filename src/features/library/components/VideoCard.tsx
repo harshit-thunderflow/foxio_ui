@@ -1,4 +1,3 @@
-import { BookOpen } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -8,6 +7,8 @@ export interface VideoCardData {
   description: string;
   thumbnail: string;
   duration: string;
+  category?: string;
+  tags?: string[];
   transcript?: { label: string; quote: string };
 }
 
@@ -28,6 +29,7 @@ export function VideoCard({ video, onClick }: VideoCardProps) {
           src={video.thumbnail}
           alt={video.title}
           className="w-full h-full object-cover rounded-t-xl"
+          loading="lazy"
         />
         {/* Play overlay on hover */}
         <div className="absolute inset-0 bg-foreground/20 opacity-0 hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -48,18 +50,19 @@ export function VideoCard({ video, onClick }: VideoCardProps) {
           {video.description}
         </p>
 
-        {/* Transcript snippet */}
-        {video.transcript && (
-          <div className="mt-1.5 sm:mt-2 p-1.5 sm:p-2 md:p-3 bg-muted/50 border border-border rounded-lg space-y-0.5 sm:space-y-1">
-            <div className="flex items-center gap-1">
-              <BookOpen className="w-2.5 h-2.5 text-primary" />
-              <span className="text-[10px] sm:text-[11px] font-medium text-primary">
-                {video.transcript.label}
-              </span>
-            </div>
-            <p className="text-[10px] sm:text-[11px] italic text-muted-foreground leading-snug line-clamp-2">
-              "{video.transcript.quote}"
-            </p>
+        {/* Category & Tags */}
+        {(video.category || video.tags?.length) && (
+          <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+            {video.category && (
+              <Badge variant="secondary" className="text-[9px] sm:text-[10px] px-1.5 py-0">
+                {video.category}
+              </Badge>
+            )}
+            {video.tags?.slice(0, 2).map((tag) => (
+              <Badge key={tag} variant="outline" className="text-[9px] sm:text-[10px] px-1 py-0">
+                {tag}
+              </Badge>
+            ))}
           </div>
         )}
       </CardContent>

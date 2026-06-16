@@ -13,7 +13,7 @@ interface PlayerControlsProps {
 
 export function PlayerControls({ onPrevious, onNext, hasPrevious = true, hasNext = true, autoplay = false, onAutoplayChange }: PlayerControlsProps) {
   return (
-    <div className="flex flex-col gap-3 sm:gap-4 max-w-2xl w-full">
+    <div className="flex flex-col gap-3 sm:gap-4 w-full">
       <div className="flex items-center justify-between">
         <Button
           variant="outline"
