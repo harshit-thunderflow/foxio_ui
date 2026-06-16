@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ChevronDown, ChevronRight, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,15 +8,28 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
-const languages = ["English (US)", "Spanish", "French"];
-
 interface VideoFooterProps {
   tipTitle?: string;
   tipDescription?: string;
+  currentVideoIndex: number;
+  language: "en" | "hi";
+  onLanguageChange: (lang: "en" | "hi") => void;
 }
 
-export function VideoFooter({ tipTitle = "Pro Tip", tipDescription = "Use keyboard shortcuts for faster navigation." }: VideoFooterProps) {
-  const [language, setLanguage] = useState("English (US)");
+const LANGUAGE_LABELS: Record<string, string> = {
+  en: "English",
+  hi: "Hindi",
+};
+
+export function VideoFooter({
+  tipTitle = "Pro Tip",
+  tipDescription = "Use keyboard shortcuts for faster navigation.",
+  currentVideoIndex,
+  language,
+  onLanguageChange,
+}: VideoFooterProps) {
+  const isFirstVideo = currentVideoIndex === 0;
+  const languages = isFirstVideo ? ["en", "hi"] as const : ["en"] as const;
 
   return (
     <div className="border-t border-border/50 p-3 sm:p-4 space-y-2">
@@ -27,14 +39,14 @@ export function VideoFooter({ tipTitle = "Pro Tip", tipDescription = "Use keyboa
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1 text-[11px] sm:text-xs h-7 sm:h-8">
-              {language}
+              {LANGUAGE_LABELS[isFirstVideo ? language : "en"]}
               <ChevronDown className="w-3 h-3 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {languages.map((lang) => (
-              <DropdownMenuItem key={lang} onClick={() => setLanguage(lang)} className="cursor-pointer hover:bg-accent">
-                {lang}
+              <DropdownMenuItem key={lang} onClick={() => onLanguageChange(lang)} className="cursor-pointer hover:bg-accent">
+                {LANGUAGE_LABELS[lang]}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

@@ -20,6 +20,7 @@ interface VideoPlayerProps {
   hasNext?: boolean;
   hasPrevious?: boolean;
   preloadSrc?: string;
+  videoIndex?: number;
   onTimeUpdate?: (currentTime: number, duration: number, isPlaying: boolean) => void;
   onEnded?: () => void;
 }
@@ -34,11 +35,13 @@ export function VideoPlayer({
   hasNext = false,
   hasPrevious = false,
   preloadSrc,
+  videoIndex,
   onTimeUpdate,
   onEnded,
 }: VideoPlayerProps) {
   const { videoRef, containerRef, state, actions } = useVideoPlayer({ onEnded });
   const prevSrcRef = useRef(sources[0]?.src);
+  const prevIndexRef = useRef(videoIndex);
   const hasPlayedRef = useRef(false);
   const [useCors, setUseCors] = useState(true);
 
@@ -62,16 +65,32 @@ export function VideoPlayer({
   // When sources change, load new source without remounting (preserves fullscreen)
   useEffect(() => {
     if (currentSrc && currentSrc !== prevSrcRef.current) {
-      prevSrcRef.current = currentSrc;
       const video = videoRef.current;
-      if (video) {
-        video.src = currentSrc;
-        video.poster = poster ?? "";
-        video.load();
-        if (autoPlay && hasPlayedRef.current) video.play().catch(() => {});
+      if (!video) return;
+
+      const wasPlaying = !video.paused;
+      const isLanguageSwitch = videoIndex === prevIndexRef.current;
+      prevSrcRef.current = currentSrc;
+      prevIndexRef.current = videoIndex;
+
+      video.src = currentSrc;
+      video.poster = poster ?? "";
+      video.load();
+
+      // Language switch: always auto-play | Video change: respect autoPlay setting
+      const shouldPlay = isLanguageSwitch
+        ? (wasPlaying || hasPlayedRef.current)
+        : (autoPlay && hasPlayedRef.current);
+
+      if (shouldPlay) {
+        const onLoaded = () => {
+          video.play().catch(() => {});
+          video.removeEventListener("loadedmetadata", onLoaded);
+        };
+        video.addEventListener("loadedmetadata", onLoaded);
       }
     }
-  }, [currentSrc, poster, autoPlay, videoRef]);
+  }, [currentSrc, poster, autoPlay, videoIndex, videoRef]);
 
   if (!sources || sources.length === 0) {
     return (

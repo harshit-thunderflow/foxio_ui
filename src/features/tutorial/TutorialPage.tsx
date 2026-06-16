@@ -19,6 +19,9 @@ import type { PlaylistItem } from "./hooks";
 import type { ProgressStep } from "./components/ProgressRail";
 import type { ChecklistItem } from "./components/Checklist";
 
+const HINDI_VIDEO_URL =
+  "https://foxio.blob.core.windows.net/uploads/generated-videos/test-project-6/5ad2099c-983c-4589-b572-6a1b257dd4cb/667a305e-cfca-4107-bc30-25585b2fe43c.mp4";
+
 export function TutorialPage() {
   usePageTitle("Tutorial");
   const [autoplay, setAutoplay] = useState(() => localStorage.getItem("foxio-autoplay") === "true");
@@ -37,15 +40,20 @@ export function TutorialPage() {
     [videos]
   );
 
+  const [language, setLanguage] = useState<"en" | "hi">("en");
+
   const playlist: PlaylistItem[] = useMemo(
     () =>
-      sortedVideos.map((v) => ({
+      sortedVideos.map((v, i) => ({
         id: v.id,
         title: v.title,
-        sources: [{ src: v.video_url, type: (v.mime_type || "video/mp4") as "video/mp4" | "video/webm" }],
+        sources: [{
+          src: i === 0 && language === "hi" ? HINDI_VIDEO_URL : v.video_url,
+          type: (v.mime_type || "video/mp4") as "video/mp4" | "video/webm",
+        }],
         poster: v.thumbnail_url || undefined,
       })),
-    [sortedVideos]
+    [sortedVideos, language]
   );
 
   // Determine initial index from progress — first non-completed video
@@ -167,7 +175,11 @@ export function TutorialPage() {
         <ScrollArea className="flex-1">
           <TutorialSkeleton />
         </ScrollArea>
-        <VideoFooter />
+        <VideoFooter
+          currentVideoIndex={0}
+          language={language}
+          onLanguageChange={setLanguage}
+        />
       </div>
     );
   }
@@ -212,6 +224,7 @@ export function TutorialPage() {
                 sources={currentItem.sources}
                 poster={currentItem.poster}
                 autoPlay={autoplay}
+                videoIndex={currentIndex}
                 onNext={hasNext ? playlistActions.next : undefined}
                 onPrevious={hasPrevious ? playlistActions.previous : undefined}
                 hasNext={hasNext}
@@ -236,7 +249,11 @@ export function TutorialPage() {
         </div>
       </ScrollArea>
 
-      <VideoFooter />
+      <VideoFooter
+        currentVideoIndex={currentIndex}
+        language={language}
+        onLanguageChange={setLanguage}
+      />
     </div>
   );
 }
