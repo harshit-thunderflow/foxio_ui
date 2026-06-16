@@ -11,8 +11,6 @@ import {
   type VideoFilters,
   type VideoProgress,
   type UpdateVideoPayload,
-  type UpdateProgressResponse,
-  type CompleteVideoResponse,
 } from "@/services/video";
 import { useAuth } from "./useAuth";
 
