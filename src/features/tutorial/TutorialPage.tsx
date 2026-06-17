@@ -48,7 +48,7 @@ export function TutorialPage() {
         id: v.id,
         title: v.title,
         sources: [{
-          src: i === 0 && language === "hi" ? HINDI_VIDEO_URL : v.video_url,
+          src: i === 1 && language === "hi" ? HINDI_VIDEO_URL : v.video_url,
           type: (v.mime_type || "video/mp4") as "video/mp4" | "video/webm",
         }],
         poster: v.thumbnail_url || undefined,

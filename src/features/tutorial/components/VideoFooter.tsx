@@ -28,8 +28,8 @@ export function VideoFooter({
   language,
   onLanguageChange,
 }: VideoFooterProps) {
-  const isFirstVideo = currentVideoIndex === 0;
-  const languages = isFirstVideo ? ["en", "hi"] as const : ["en"] as const;
+  const isSecondVideo = currentVideoIndex === 1;
+  const languages = isSecondVideo ? ["en", "hi"] as const : ["en"] as const;
 
   return (
     <div className="border-t border-border/50 p-3 sm:p-4 space-y-2">
@@ -39,7 +39,7 @@ export function VideoFooter({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-1 text-[11px] sm:text-xs h-7 sm:h-8">
-              {LANGUAGE_LABELS[isFirstVideo ? language : "en"]}
+              {LANGUAGE_LABELS[isSecondVideo ? language : "en"]}
               <ChevronDown className="w-3 h-3 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
