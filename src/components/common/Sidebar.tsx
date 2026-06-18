@@ -8,7 +8,7 @@ import { useState } from "react";
 const navItems = [
   { to: "/tutorial", icon: CirclePlay, label: "Tutorial" },
   { to: "/library", icon: SquarePlay, label: "Library" },
-  { to: "/overview", icon: GitFork, label: "Overview" },
+  // { to: "/overview", icon: GitFork, label: "Overview" },
   { to: "/chatbot", icon: Bot, label: "Chatbot" },
 ];
 
