@@ -27,7 +27,7 @@ const upcomingSteps: StepItem[] = [
 export function OverviewPage() {
   usePageTitle("Overview");
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden p-4 sm:p-6">
       <ScrollArea className="flex-1 px-4">
         <div className="space-y-4">
         <HeroSection

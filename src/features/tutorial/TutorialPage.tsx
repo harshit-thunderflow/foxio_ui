@@ -171,7 +171,7 @@ export function TutorialPage() {
   // Show skeleton until both APIs have responded
   if (isInitialLoad && loading) {
     return (
-      <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden p-4 sm:p-6">
         <ScrollArea className="flex-1">
           <TutorialSkeleton />
         </ScrollArea>
@@ -188,7 +188,7 @@ export function TutorialPage() {
   if (!playlist.length) return <div className="flex items-center justify-center h-full text-muted-foreground">No tutorials available.</div>;
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden p-4 sm:p-6">
       <ScrollArea className="flex-1 px-4">
         <div className="mx-auto max-w-4xl space-y-4">
           <ContextLabel />

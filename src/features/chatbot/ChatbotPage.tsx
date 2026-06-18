@@ -130,7 +130,7 @@ export function ChatbotPage() {
   }, [removeConversation, refreshRecent]);
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden p-4 sm:p-6">
       {view === "recent" && (
         <>
           <div className="shrink-0 px-3 pt-2 space-y-2">

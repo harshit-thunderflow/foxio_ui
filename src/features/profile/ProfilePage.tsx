@@ -30,7 +30,7 @@ export function ProfilePage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex items-center justify-center h-full p-4">
+      <div className="flex items-center justify-center h-full p-4 sm:p-6">
         <LoginForm />
       </div>
     );
@@ -38,15 +38,17 @@ export function ProfilePage() {
 
   if (loading) {
     return (
-      <ScrollArea className="flex-1 w-full">
-        <ProfileSkeleton />
-      </ScrollArea>
+      <div className="p-4 sm:p-6 h-full">
+        <ScrollArea className="flex-1 w-full">
+          <ProfileSkeleton />
+        </ScrollArea>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-3 p-4">
+      <div className="flex flex-col items-center justify-center h-full gap-3 p-4 sm:p-6">
         <p className="text-sm text-destructive">{error}</p>
         <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
           Retry
@@ -70,7 +72,7 @@ export function ProfilePage() {
   ];
 
   return (
-    <ScrollArea className="flex-1 w-full">
+    <ScrollArea className="flex-1 w-full p-4 sm:p-6">
       <div className="flex flex-col w-full">
 
       <Card className="mt-4 rounded-none! shadow-md! w-full">

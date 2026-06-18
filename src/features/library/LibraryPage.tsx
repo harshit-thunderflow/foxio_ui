@@ -1,12 +1,11 @@
 import { useState, useMemo, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { SearchBar, CategoryPills, VideoCard, LibraryFooterNav, LibrarySkeleton } from "./components";
+import { SearchBar, CategoryPills, VideoCard, LibrarySkeleton } from "./components";
+import { VideoPlayerModal } from "./components/VideoPlayerModal";
 import { usePageTitle, useVideos, useVideoCategories } from "@/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function LibraryPage() {
   usePageTitle("Library");
-  const navigate = useNavigate();
 
   const { videos, loading: videosLoading, error } = useVideos();
   const { categories, loading: categoriesLoading } = useVideoCategories();
@@ -44,9 +43,11 @@ export function LibraryPage() {
     return result;
   }, [videos, activeCategory, debouncedSearch]);
 
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+
   const handleVideoClick = useCallback((videoId: string) => {
-    navigate("/tutorial", { state: { videoId } });
-  }, [navigate]);
+    setActiveVideoId(videoId);
+  }, []);
 
   const formatDuration = (seconds: number) => {
     const m = Math.floor(seconds / 60);
@@ -61,7 +62,6 @@ export function LibraryPage() {
         <ScrollArea className="flex-1 px-4 pt-2">
           <LibrarySkeleton />
         </ScrollArea>
-        <LibraryFooterNav />
       </div>
     );
   }
@@ -71,7 +71,7 @@ export function LibraryPage() {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="relative flex flex-col h-full overflow-hidden p-4 sm:p-6">
       {/* Search + Filters */}
       <div className="shrink-0 space-y-3 px-4 pt-2">
         <SearchBar value={searchQuery} onChange={handleSearch} />
@@ -109,8 +109,13 @@ export function LibraryPage() {
         )}
       </ScrollArea>
 
-      {/* Footer Nav */}
-      <LibraryFooterNav />
+      {activeVideoId && (
+        <VideoPlayerModal
+          videos={filteredVideos}
+          initialVideoId={activeVideoId}
+          onClose={() => setActiveVideoId(null)}
+        />
+      )}
     </div>
   );
 }

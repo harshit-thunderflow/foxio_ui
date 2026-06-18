@@ -9,7 +9,7 @@ export function AppLayout() {
       <Sidebar />
       <div className="relative flex flex-1 flex-col overflow-hidden">
         <AppHeader />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
         <ToastContainer />

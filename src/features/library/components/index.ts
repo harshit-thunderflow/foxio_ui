@@ -3,3 +3,4 @@ export { CategoryPills } from "./CategoryPills";
 export { VideoCard } from "./VideoCard";
 export { LibraryFooterNav } from "./LibraryFooterNav";
 export { LibrarySkeleton } from "./LibrarySkeleton";
+export { VideoPlayerModal } from "./VideoPlayerModal";
