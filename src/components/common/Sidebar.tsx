@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { CirclePlay, SquarePlay, GitFork, Bot, User } from "lucide-react";
+import { CirclePlay, SquarePlay, Bot, User } from "lucide-react";
+// import {GitFork } from "lucide-react";
 import { useFoxio } from "@/app/providers/FoxioProvider";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 import { DiscardModal } from "@/components/common/DiscardModal";
